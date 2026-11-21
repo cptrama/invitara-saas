@@ -1,0 +1,207 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<!-- Dashboard Header Title & Action -->
+<div class="row align-items-center mb-4">
+    <div class="col">
+        <h2 class="page-title h2 fw-bold text-dark mb-1">Dashboard Overview</h2>
+        <div class="text-muted small">
+            Ringkasan status undangan dan respons kehadiran tamu pernikahan Anda
+        </div>
+    </div>
+    <div class="col-auto ms-auto d-print-none">
+        <div class="btn-list">
+            <a href="{{ url('/dashboard/invitations/create') }}" class="btn btn-primary d-inline-flex align-items-center shadow-xs">
+                <i class="ti ti-plus me-1"></i> Buat Undangan Baru
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Counter Cards -->
+<div class="row row-deck row-cards mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm shadow-xs border-0 card-hover-scale">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar shadow-xs rounded-2">
+                            <i class="ti ti-mail fs-2"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted small">Total Undangan</div>
+                        <div class="h2 mb-0 fw-bold text-dark">{{ stats.total ?? 0 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm shadow-xs border-0 card-hover-scale">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-success text-white avatar shadow-xs rounded-2">
+                            <i class="ti ti-circle-check fs-2"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted small">Terpublikasi</div>
+                        <div class="h2 mb-0 fw-bold text-success">{{ stats.published ?? 0 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm shadow-xs border-0 card-hover-scale">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-secondary text-white avatar shadow-xs rounded-2">
+                            <i class="ti ti-file-text fs-2"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted small">Draft</div>
+                        <div class="h2 mb-0 fw-bold text-secondary">{{ stats.drafts ?? 0 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm shadow-xs border-0 card-hover-scale">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-indigo text-white avatar shadow-xs rounded-2">
+                            <i class="ti ti-users fs-2"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted small">Total Respon RSVP</div>
+                        <div class="h2 mb-0 fw-bold text-indigo">{{ stats.total_rsvps ?? 0 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Invitations List Card -->
+<div class="card shadow-xs border-0">
+    <div class="card-header d-flex justify-content-between align-items-center py-3 bg-white">
+        <div>
+            <h3 class="card-title fw-bold text-dark mb-0">Daftar Undangan Saya</h3>
+            <p class="card-subtitle text-muted small mb-0 mt-1">Daftar undangan yang sedang Anda kelola</p>
+        </div>
+        <div>
+            <span class="badge bg-primary-lt">{{ invitations|length }} Undangan</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table card-table table-vcenter table-hover datatable mb-0">
+            <thead>
+                <tr>
+                    <th class="w-1 text-center">No</th>
+                    <th>Judul & Pasangan</th>
+                    <th>Template</th>
+                    <th>Tanggal Acara</th>
+                    <th>Status</th>
+                    <th>RSVP Tamu</th>
+                    <th class="text-end pe-3">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in invitations %}
+                    <tr>
+                        <td class="text-center text-muted font-monospace">{{ loop.index }}</td>
+                        <td>
+                            <div class="d-flex py-1 align-items-center">
+                                <span class="avatar avatar-sm me-3 bg-pink-lt text-pink rounded shadow-xs">
+                                    <i class="ti ti-heart"></i>
+                                </span>
+                                <div class="flex-fill">
+                                    <div class="fw-bold text-dark">{{ inv.title }}</div>
+                                    <div class="text-muted small">
+                                        <i class="ti ti-users me-1"></i> {{ inv.partner_one_name }} &amp; {{ inv.partner_two_name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-blue-lt d-inline-flex align-items-center">
+                                <i class="ti ti-palette me-1"></i> {{ inv.template_name }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="text-dark small">
+                                <i class="ti ti-calendar me-1 text-muted"></i>
+                                {{ inv.event_date ? inv.event_date|date("d M Y") : '-' }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if inv.status == 'published' %}
+                                <span class="badge bg-success-lt d-inline-flex align-items-center">
+                                    <span class="status-dot status-dot-animated bg-success me-1"></span> Terpublikasi
+                                </span>
+                            {% elseif inv.status == 'draft' %}
+                                <span class="badge bg-secondary-lt d-inline-flex align-items-center">
+                                    <span class="status-dot bg-secondary me-1"></span> Draft
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning-lt d-inline-flex align-items-center">
+                                    <span class="status-dot bg-warning me-1"></span> Nonaktif
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="fw-semibold text-dark">{{ inv.total_rsvps }} respons</div>
+                            <div class="text-muted small">{{ inv.total_attending_guests }} orang hadir</div>
+                        </td>
+                        <td class="text-end pe-3">
+                            <div class="btn-list justify-content-end flex-nowrap">
+                                {% if inv.status == 'published' %}
+                                    <a href="{{ url('/i/' ~ inv.slug) }}" target="_blank" class="btn btn-icon btn-outline-success btn-sm" title="Lihat Undangan Publik">
+                                        <i class="ti ti-external-link"></i>
+                                    </a>
+                                {% endif %}
+                                <a href="{{ url('/dashboard/invitations/' ~ inv.id ~ '/edit') }}" class="btn btn-icon btn-outline-primary btn-sm" title="Edit Undangan">
+                                    <i class="ti ti-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="empty py-4">
+                                <div class="empty-icon mb-3">
+                                    <span class="avatar avatar-xl bg-primary-lt text-primary rounded-circle">
+                                        <i class="ti ti-mail-opened fs-1"></i>
+                                    </span>
+                                </div>
+                                <h3 class="empty-title fw-bold">Belum Ada Undangan</h3>
+                                <p class="empty-subtitle text-muted col-md-6 mx-auto">
+                                    Anda belum memiliki undangan aktif. Pilih template dan mulailah merancang momen pernikahan bahagia Anda bersama Invitara.
+                                </p>
+                                <div class="empty-action mt-3">
+                                    <a href="{{ url('/dashboard/invitations/create') }}" class="btn btn-primary d-inline-flex align-items-center">
+                                        <i class="ti ti-plus me-1"></i> Buat Undangan Pertama
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

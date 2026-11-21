@@ -1,0 +1,61 @@
+{% extends "layouts/auth.twig" %}
+
+{% block auth_content %}
+<h2 class="h2 text-center mb-4 fw-bold">Daftar Akun Baru</h2>
+<p class="text-center text-muted small mb-4">Mulai rancang undangan pernikahan impian Anda dalam hitungan menit</p>
+
+<form action="{{ url('/register') }}" method="POST" autocomplete="on">
+    {{ csrf_field() }}
+
+    <div class="mb-3">
+        <label class="form-label required" for="name">Nama Lengkap</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-user text-muted"></i>
+            </span>
+            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Contoh: Andi Pratama" autocomplete="name" required autofocus>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label required" for="email">Alamat Email</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-mail text-muted"></i>
+            </span>
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" autocomplete="email" required>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label required" for="password">Kata Sandi</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-lock text-muted"></i>
+            </span>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Minimal 6 karakter" autocomplete="new-password" required>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label required" for="password_confirmation">Konfirmasi Kata Sandi</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-shield-check text-muted"></i>
+            </span>
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Ulangi kata sandi Anda" autocomplete="new-password" required>
+        </div>
+    </div>
+
+    <div class="form-footer mt-4">
+        <button type="submit" class="btn btn-primary w-100 py-2">
+            <i class="ti ti-user-plus me-1"></i> Buat Akun Invitara
+        </button>
+    </div>
+</form>
+
+<div class="text-center text-muted small mt-4">
+    Sudah memiliki akun?
+    <a href="{{ url('/login') }}" class="fw-bold text-decoration-none ms-1">Masuk di sini</a>
+</div>
+{% endblock %}

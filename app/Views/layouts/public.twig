@@ -1,0 +1,126 @@
+{% extends "layouts/base.twig" %}
+
+{% block body_class %}d-flex flex-column min-vh-100 bg-white{% endblock %}
+
+{% block content %}
+<!-- Navbar Publik Tabler -->
+<header class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top shadow-xs">
+    <div class="container-xl">
+        <a class="navbar-brand d-flex align-items-center text-decoration-none" href="{{ url('/') }}">
+            <span class="avatar avatar-sm bg-primary-lt text-primary rounded me-2">
+                <i class="ti ti-mail-heart fs-2"></i>
+            </span>
+            <span class="fw-bold fs-2 text-dark tracking-tight">Invitara</span>
+        </a>
+
+        <!-- Responsive Mobile Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-menu">
+            <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{{ url('/') }}">
+                            <span class="nav-link-title">Beranda</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{{ url('/#cara-kerja') }}">
+                            <span class="nav-link-title">Cara Kerja</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{{ url('/#templates') }}">
+                            <span class="nav-link-title">Template Wedding</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{{ url('/#fitur') }}">
+                            <span class="nav-link-title">Fitur Utama</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="navbar-nav flex-row order-md-last align-items-center gap-2 mt-3 mt-md-0">
+                    {% if is_authenticated() %}
+                        <a href="{{ url('/dashboard') }}" class="btn btn-primary d-inline-flex align-items-center">
+                            <i class="ti ti-layout-dashboard me-2"></i> Buka Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url('/login') }}" class="btn btn-ghost-secondary">
+                            Masuk
+                        </a>
+                        <a href="{{ url('/register') }}" class="btn btn-primary d-inline-flex align-items-center">
+                            <i class="ti ti-user-plus me-1"></i> Buat Undangan
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Body -->
+<main class="flex-grow-1">
+    {% include "components/alerts.twig" %}
+    {% block public_content %}{% endblock %}
+</main>
+
+<!-- Footer Publik Elegan -->
+<footer class="footer bg-dark text-white border-top py-5 mt-auto">
+    <div class="container-xl">
+        <div class="row g-4 justify-content-between">
+            <div class="col-lg-5 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="avatar avatar-sm bg-primary-lt text-primary rounded me-2">
+                        <i class="ti ti-mail-heart fs-2"></i>
+                    </span>
+                    <span class="fw-bold fs-2 text-white">Invitara</span>
+                </div>
+                <p class="text-secondary small mb-3">
+                    Invitara adalah platform SaaS pembuat undangan pernikahan digital modern, personal, dan praktis.
+                    Rancang momen spesial Anda dengan elegan dan bagikan kebahagiaan kepada seluruh tamu dengan mudah.
+                </p>
+                <div class="text-secondary small">
+                    <em>Create Your Moment, Share Your Invitation.</em>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h4 class="text-white fw-bold mb-3">Navigasi</h4>
+                <ul class="list-unstyled text-secondary small mb-0">
+                    <li class="mb-2"><a href="{{ url('/') }}" class="text-secondary text-decoration-none">Beranda</a></li>
+                    <li class="mb-2"><a href="{{ url('/#cara-kerja') }}" class="text-secondary text-decoration-none">Alur 3 Langkah</a></li>
+                    <li class="mb-2"><a href="{{ url('/#templates') }}" class="text-secondary text-decoration-none">Galeri Template</a></li>
+                    <li class="mb-2"><a href="{{ url('/login') }}" class="text-secondary text-decoration-none">Masuk Akun</a></li>
+                    <li><a href="{{ url('/register') }}" class="text-secondary text-decoration-none">Daftar Akun Baru</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-12">
+                <h4 class="text-white fw-bold mb-3">Keunggulan Invitara</h4>
+                <div class="d-flex flex-column gap-2 text-secondary small">
+                    <div class="d-flex align-items-center">
+                        <i class="ti ti-check text-success me-2"></i> Desain Responsif & Mobile-Friendly
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="ti ti-check text-success me-2"></i> Manajemen RSVP Real-Time
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="ti ti-check text-success me-2"></i> Siap Pakai Tanpa Coding
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="ti ti-check text-success me-2"></i> Keamanan Data & Anti-CSRF
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-top border-secondary-subtle pt-4 mt-5 text-center text-secondary small">
+            &copy; {{ "now"|date("Y") }} <strong>Invitara</strong>. Hak cipta dilindungi undang-undang.
+        </div>
+    </div>
+</footer>
+{% endblock %}

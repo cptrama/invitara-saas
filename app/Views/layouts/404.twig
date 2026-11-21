@@ -1,0 +1,22 @@
+{% extends "layouts/base.twig" %}
+
+{% block body_class %}d-flex flex-column bg-body-tertiary min-vh-100{% endblock %}
+
+{% block content %}
+<div class="page page-center py-5">
+    <div class="container-tight py-4 text-center">
+        <div class="empty">
+            <div class="empty-header display-1 fw-extrabold text-muted mb-2">404</div>
+            <p class="empty-title h2 fw-bold text-dark">Oops… Halaman Tidak Ditemukan</p>
+            <p class="empty-subtitle text-muted col-md-10 mx-auto">
+                Mohon maaf, tautan yang Anda tuju tidak ditemukan, telah dihapus, atau sedang tidak tersedia.
+            </p>
+            <div class="empty-action mt-4">
+                <a href="{{ url('/') }}" class="btn btn-primary d-inline-flex align-items-center">
+                    <i class="ti ti-home me-2"></i> Kembali ke Beranda
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

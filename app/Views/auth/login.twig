@@ -1,0 +1,41 @@
+{% extends "layouts/auth.twig" %}
+
+{% block auth_content %}
+<h2 class="h2 text-center mb-4 fw-bold">Masuk ke Akun Anda</h2>
+<p class="text-center text-muted small mb-4">Silakan masuk untuk mengelola undangan dan RSVP Anda</p>
+
+<form action="{{ url('/login') }}" method="POST" autocomplete="on">
+    {{ csrf_field() }}
+
+    <div class="mb-3">
+        <label class="form-label required" for="email">Alamat Email</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-mail text-muted"></i>
+            </span>
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" autocomplete="email" required autofocus>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label required" for="password">Kata Sandi</label>
+        <div class="input-group input-group-flat">
+            <span class="input-group-text">
+                <i class="ti ti-lock text-muted"></i>
+            </span>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan kata sandi Anda" autocomplete="current-password" required>
+        </div>
+    </div>
+
+    <div class="form-footer mt-4">
+        <button type="submit" class="btn btn-primary w-100 py-2">
+            <i class="ti ti-login me-1"></i> Masuk Sekarang
+        </button>
+    </div>
+</form>
+
+<div class="text-center text-muted small mt-4">
+    Belum memiliki akun?
+    <a href="{{ url('/register') }}" class="fw-bold text-decoration-none ms-1">Daftar sekarang</a>
+</div>
+{% endblock %}
