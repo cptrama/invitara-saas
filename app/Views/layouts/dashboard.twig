@@ -107,6 +107,17 @@
                             <span class="nav-link-title text-muted">Lihat Landing Page</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <form action="{{ url('/logout') }}" method="POST" class="m-0 p-0">
+                            {{ csrf_field() }}
+                            <button type="submit" class="nav-link text-danger border-0 bg-transparent w-100 text-start" style="cursor: pointer;">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block text-danger">
+                                    <i class="ti ti-logout fs-2"></i>
+                                </span>
+                                <span class="nav-link-title text-danger fw-semibold">Keluar</span>
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>

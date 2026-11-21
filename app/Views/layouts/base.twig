@@ -18,9 +18,53 @@
 <body class="{% block body_class %}{% endblock %}">
     {% block content %}{% endblock %}
 
-    <!-- Tabler UI & Bootstrap JS Bundle -->
+    <!-- Bootstrap 5 Bundle (with Popper) & Tabler UI Core JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
-    <script src="{{ asset('build/assets/app.js') }}?v=1.0.2"></script>
+    <script src="{{ asset('build/assets/app.js') }}?v=1.0.3"></script>
+
+    <!-- Bulletproof Universal Dropdown & Collapse Handler -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('click', function (e) {
+                var toggle = e.target.closest('[data-bs-toggle="dropdown"]');
+                if (toggle) {
+                    e.preventDefault();
+                    var parent = toggle.closest('.dropdown') || toggle.parentElement;
+                    if (parent) {
+                        var menu = parent.querySelector('.dropdown-menu');
+                        if (menu) {
+                            var isOpen = menu.classList.contains('show');
+                            document.querySelectorAll('.dropdown-menu.show').forEach(function(m) {
+                                m.classList.remove('show');
+                                var p = m.closest('.dropdown');
+                                if (p) p.classList.remove('show');
+                            });
+                            document.querySelectorAll('[data-bs-toggle="dropdown"][aria-expanded="true"]').forEach(function(t) {
+                                t.setAttribute('aria-expanded', 'false');
+                            });
+                            if (!isOpen) {
+                                menu.classList.add('show');
+                                parent.classList.add('show');
+                                toggle.setAttribute('aria-expanded', 'true');
+                            }
+                        }
+                    }
+                    return;
+                }
+                if (!e.target.closest('.dropdown-menu')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(function(m) {
+                        m.classList.remove('show');
+                        var p = m.closest('.dropdown');
+                        if (p) p.classList.remove('show');
+                    });
+                    document.querySelectorAll('[data-bs-toggle="dropdown"][aria-expanded="true"]').forEach(function(t) {
+                        t.setAttribute('aria-expanded', 'false');
+                    });
+                }
+            });
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
