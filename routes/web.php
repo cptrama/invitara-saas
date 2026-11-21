@@ -17,6 +17,8 @@ use App\Middleware\OwnershipMiddleware;
 // Public Routes
 Flight::route('GET /', [HomeController::class, 'index']);
 Flight::route('GET /templates', [TemplateController::class, 'index']);
+Flight::route('GET /templates/preview/@key', [TemplateController::class, 'preview']);
+Flight::route('GET /templates/@slug/preview', [TemplateController::class, 'preview']);
 Flight::route('GET /templates/@slug', [TemplateController::class, 'show']);
 Flight::route('GET /i/@slug:[a-zA-Z0-9\-]+', [InvitationController::class, 'showPublic']);
 Flight::route('POST /i/@slug:[a-zA-Z0-9\-]+/rsvp', [RSVPController::class, 'storePublic'])->addMiddleware(new CsrfMiddleware());

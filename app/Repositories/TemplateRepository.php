@@ -65,6 +65,20 @@ class TemplateRepository
         return $result ?: null;
     }
 
+    public function findByViewKey(string $viewKey): ?array
+    {
+        $stmt = $this->db->prepare("
+            SELECT t.*, c.name AS category_name 
+            FROM templates t
+            JOIN categories c ON c.id = t.category_id
+            WHERE t.view_key = :view_key 
+            LIMIT 1
+        ");
+        $stmt->execute(['view_key' => $viewKey]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
     public function create(array $data): int
     {
         $stmt = $this->db->prepare("

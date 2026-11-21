@@ -94,4 +94,44 @@ try {
     exit(1);
 }
 
+// Test 6: TemplateController preview tests for all 3 templates
+try {
+    $tmplController = new App\Controllers\TemplateController();
+    
+    foreach (['floral', 'modern', 'minimal', 'floral-klasik'] as $key) {
+        ob_start();
+        $tmplController->preview($key);
+        $html = ob_get_clean();
+        if (strlen($html) > 500 && (stripos($html, 'weddingBottomDock') !== false || stripos($html, 'Auto Scroll') !== false)) {
+            echo "✓ [PASS] TemplateController::preview('$key') renders interactive wedding preview (" . strlen($html) . " bytes)\n";
+        } else {
+            echo "✗ [FAIL] TemplateController::preview('$key') missing interactive dock elements\n";
+            exit(1);
+        }
+    }
+} catch (Throwable $e) {
+    ob_end_clean();
+    echo "✗ [FAIL] TemplateController::preview() threw: " . $e->getMessage() . "\n";
+    exit(1);
+}
+
+// Test 7: Public invitations for all 3 templates
+try {
+    foreach (['budi-santi', 'raden-citra', 'dimas-amanda'] as $slug) {
+        ob_start();
+        $invController->showPublic($slug);
+        $html = ob_get_clean();
+        if (strlen($html) > 500 && stripos($html, 'weddingBottomDock') !== false) {
+            echo "✓ [PASS] InvitationController::showPublic('$slug') renders live public invitation (" . strlen($html) . " bytes)\n";
+        } else {
+            echo "✗ [FAIL] InvitationController::showPublic('$slug') failed to render properly\n";
+            exit(1);
+        }
+    }
+} catch (Throwable $e) {
+    ob_end_clean();
+    echo "✗ [FAIL] InvitationController::showPublic() threw: " . $e->getMessage() . "\n";
+    exit(1);
+}
+
 echo "--- ALL HTTP CONTROLLER DISPATCH TESTS PASSED ---\n\n";
