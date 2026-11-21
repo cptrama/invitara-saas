@@ -15,11 +15,11 @@ class RSVPController
     private InvitationRepository $invitationRepo;
 
     public function __construct(
-        ?RSVPRepository $rsvpRepo = null,
-        ?InvitationRepository $invitationRepo = null
+        $rsvpRepo = null,
+        $invitationRepo = null
     ) {
-        $this->rsvpRepo = $rsvpRepo ?? new RSVPRepository();
-        $this->invitationRepo = $invitationRepo ?? new InvitationRepository();
+        $this->rsvpRepo = ($rsvpRepo instanceof RSVPRepository) ? $rsvpRepo : new RSVPRepository();
+        $this->invitationRepo = ($invitationRepo instanceof InvitationRepository) ? $invitationRepo : new InvitationRepository();
     }
 
     /**
