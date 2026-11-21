@@ -63,8 +63,9 @@ class AdminController
     /**
      * Toggle Template Active / Inactive Status
      */
-    public function toggleTemplate(int $id): void
+    public function toggleTemplate($id): void
     {
+        $id = (int)$id;
         $template = $this->templateRepo->findById($id);
         if (!$template) {
             Flash::set('error', 'Template tidak ditemukan.');

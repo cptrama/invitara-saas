@@ -76,8 +76,9 @@ class RSVPController
      * Display guest list and RSVP summary for invitation owner
      * GET /dashboard/invitations/@id/rsvps
      */
-    public function index(int $id): void
+    public function index($id): void
     {
+        $id = (int)$id;
         $invitation = $this->invitationRepo->findById($id);
         if (!$invitation) {
             Flash::set('error', 'Undangan tidak ditemukan.');
@@ -100,8 +101,10 @@ class RSVPController
      * Delete an invalid or spam RSVP entry
      * POST /dashboard/invitations/@id/rsvps/@rsvp_id/delete
      */
-    public function delete(int $id, int $rsvp_id): void
+    public function delete($id, $rsvp_id): void
     {
+        $id = (int)$id;
+        $rsvp_id = (int)$rsvp_id;
         $rsvp = $this->rsvpRepo->findById($rsvp_id);
 
         if (!$rsvp || (int)$rsvp['invitation_id'] !== $id) {

@@ -75,4 +75,23 @@ try {
     exit(1);
 }
 
+// Test 5: Test edit with string ID (FlightPHP route param compatibility)
+try {
+    $pdo = App\Services\Database::getConnection();
+    $row = $pdo->query("SELECT id FROM invitations LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $stringId = (string)$row['id'];
+        ob_start();
+        $invController->edit($stringId);
+        $html = ob_get_clean();
+        if (strlen($html) > 500 && stripos($html, 'Edit Undangan') !== false) {
+            echo "✓ [PASS] InvitationController::edit('$stringId') renders HTML successfully with string ID\n";
+        }
+    }
+} catch (Throwable $e) {
+    ob_end_clean();
+    echo "✗ [FAIL] InvitationController::edit() with string ID threw: " . $e->getMessage() . "\n";
+    exit(1);
+}
+
 echo "--- ALL HTTP CONTROLLER DISPATCH TESTS PASSED ---\n\n";

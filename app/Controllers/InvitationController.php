@@ -128,8 +128,9 @@ class InvitationController
      * Show form-based editor
      * GET /dashboard/invitations/@id/edit
      */
-    public function edit(int $id): void
+    public function edit($id): void
     {
+        $id = (int)$id;
         $invitation = $this->invitationRepo->findById($id);
         if (!$invitation) {
             Flash::set('error', 'Undangan tidak ditemukan.');
@@ -150,8 +151,9 @@ class InvitationController
      * Update invitation details
      * POST /dashboard/invitations/@id/edit
      */
-    public function update(int $id): void
+    public function update($id): void
     {
+        $id = (int)$id;
         $data = Flight::request()->data->getData();
 
         $rules = [
@@ -213,8 +215,9 @@ class InvitationController
      * Delete invitation
      * POST /dashboard/invitations/@id/delete
      */
-    public function delete(int $id): void
+    public function delete($id): void
     {
+        $id = (int)$id;
         $this->invitationRepo->delete($id);
 
         Flash::set('success', 'Undangan berhasil dihapus.');
@@ -225,8 +228,9 @@ class InvitationController
      * Publish invitation
      * POST /dashboard/invitations/@id/publish
      */
-    public function publish(int $id): void
+    public function publish($id): void
     {
+        $id = (int)$id;
         $this->invitationService->publish($id);
 
         Flash::set('success', 'Undangan berhasil dipublikasikan! Tautan publik siap dibagikan.');
@@ -237,8 +241,9 @@ class InvitationController
      * Unpublish invitation
      * POST /dashboard/invitations/@id/unpublish
      */
-    public function unpublish(int $id): void
+    public function unpublish($id): void
     {
+        $id = (int)$id;
         $this->invitationService->unpublish($id);
 
         Flash::set('success', 'Publikasi undangan dibatalkan. Undangan kini dinonaktifkan dari publik.');
