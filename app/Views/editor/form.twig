@@ -1,0 +1,311 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<div class="row align-items-center mb-4">
+    <div class="col">
+        <h2 class="page-title h2 fw-bold text-dark mb-1">
+            {{ invitation.id ? 'Edit Undangan Pernikahan' : 'Buat Undangan Pernikahan Baru' }}
+        </h2>
+        <div class="text-muted small">
+            Lengkapi detail calon mempelai, waktu &amp; lokasi acara, serta pilih tema visual yang Anda sukai.
+        </div>
+    </div>
+    <div class="col-auto ms-auto">
+        <a href="{{ url('/dashboard/invitations') }}" class="btn btn-outline-secondary d-inline-flex align-items-center">
+            <i class="ti ti-arrow-left me-1"></i> Kembali ke Daftar
+        </a>
+    </div>
+</div>
+
+<form action="{{ action_url ?? (invitation.id ? url('/dashboard/invitations/' ~ invitation.id ~ '/edit') : url('/dashboard/invitations/create')) }}" 
+      method="POST" 
+      enctype="multipart/form-data">
+    {{ csrf_field() }}
+
+    <div class="row g-4">
+        <!-- Kolom Kiri: Detail Pasangan & Acara -->
+        <div class="col-lg-8">
+            <!-- Kartu 1: Informasi Dasar & Tautan -->
+            <div class="card shadow-xs border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h3 class="card-title fw-bold text-dark mb-0">
+                        <i class="ti ti-info-circle text-primary me-2"></i> Informasi Utama &amp; Tautan Undangan
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label required" for="title">Judul Undangan</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="title" 
+                               name="title" 
+                               value="{{ old('title', invitation.title ?? '') }}" 
+                               placeholder="Contoh: The Wedding of Romeo & Juliet" 
+                               required>
+                        <small class="form-hint">Nama umum undangan yang akan tampil di dashboard dan judul tab browser.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label required" for="slug">Tautan Kustom (URL Slug)</label>
+                        <div class="input-group">
+                            <span class="input-group-text text-muted bg-light">{{ url('/i/') }}/</span>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="slug" 
+                                   name="slug" 
+                                   value="{{ old('slug', invitation.slug ?? '') }}" 
+                                   placeholder="romeo-dan-juliet" 
+                                   pattern="[a-z0-9\-]+" 
+                                   required>
+                        </div>
+                        <small class="form-hint">Gunakan huruf kecil, angka, dan tanda hubung (-) saja. Contoh: <code>romeo-dan-juliet</code>.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kartu 2: Profil Calon Mempelai -->
+            <div class="card shadow-xs border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h3 class="card-title fw-bold text-dark mb-0">
+                        <i class="ti ti-users text-pink me-2"></i> Data Calon Mempelai
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label required" for="partner_one_name">Nama Mempelai Pria / Pertama</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="ti ti-man text-muted"></i></span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="partner_one_name" 
+                                       name="partner_one_name" 
+                                       value="{{ old('partner_one_name', invitation.partner_one_name ?? '') }}" 
+                                       placeholder="Contoh: Romeo Montague" 
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label required" for="partner_two_name">Nama Mempelai Wanita / Kedua</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="ti ti-woman text-muted"></i></span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="partner_two_name" 
+                                       name="partner_two_name" 
+                                       value="{{ old('partner_two_name', invitation.partner_two_name ?? '') }}" 
+                                       placeholder="Contoh: Juliet Capulet" 
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" for="cover_photo">Foto Sampul (Cover Photo)</label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="cover_photo" 
+                                   name="cover_photo" 
+                                   accept="image/jpeg,image/png,image/webp">
+                            <small class="form-hint">Format JPG, PNG, atau WebP. Maksimal 2MB. Tampil di header undangan pernikahan.</small>
+                            {% if invitation.cover_photo_path %}
+                                <div class="mt-2 text-muted small">
+                                    <i class="ti ti-photo me-1"></i> Foto saat ini: <code>{{ invitation.cover_photo_path }}</code>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kartu 3: Waktu, Lokasi & Peta -->
+            <div class="card shadow-xs border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h3 class="card-title fw-bold text-dark mb-0">
+                        <i class="ti ti-calendar-event text-success me-2"></i> Waktu &amp; Lokasi Acara
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label required" for="event_date">Tanggal Acara</label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   id="event_date" 
+                                   name="event_date" 
+                                   value="{{ old('event_date', invitation.event_date ?? '') }}" 
+                                   required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label" for="event_time">Waktu Acara</label>
+                            <input type="time" 
+                                   class="form-control" 
+                                   id="event_time" 
+                                   name="event_time" 
+                                   value="{{ old('event_time', invitation.event_time ?? '10:00') }}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label required" for="timezone">Zona Waktu</label>
+                            <select class="form-select" id="timezone" name="timezone">
+                                <option value="Asia/Jakarta" {{ old('timezone', invitation.timezone ?? 'Asia/Jakarta') == 'Asia/Jakarta' ? 'selected' : '' }}>WIB (Asia/Jakarta)</option>
+                                <option value="Asia/Makassar" {{ old('timezone', invitation.timezone ?? '') == 'Asia/Makassar' ? 'selected' : '' }}>WITA (Asia/Makassar)</option>
+                                <option value="Asia/Jayapura" {{ old('timezone', invitation.timezone ?? '') == 'Asia/Jayapura' ? 'selected' : '' }}>WIT (Asia/Jayapura)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" for="venue_name">Nama Tempat / Gedung Acara</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="venue_name" 
+                                   name="venue_name" 
+                                   value="{{ old('venue_name', invitation.venue_name ?? '') }}" 
+                                   placeholder="Contoh: Grand Ballroom Hotel Indonesia Kempinski">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" for="venue_address">Alamat Lengkap</label>
+                            <textarea class="form-control" 
+                                      id="venue_address" 
+                                      name="venue_address" 
+                                      rows="2" 
+                                      placeholder="Jl. MH Thamrin No. 1, Menteng, Jakarta Pusat">{{ old('venue_address', invitation.venue_address ?? '') }}</textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" for="maps_url">Tautan Google Maps</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="ti ti-map-pin text-danger"></i></span>
+                                <input type="url" 
+                                       class="form-control" 
+                                       id="maps_url" 
+                                       name="maps_url" 
+                                       value="{{ old('maps_url', invitation.maps_url ?? '') }}" 
+                                       placeholder="https://maps.google.com/?q=...">
+                            </div>
+                            <small class="form-hint">Tautan lokasi Google Maps yang dapat diklik oleh tamu undangan.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kartu 4: Kisah & Pesan Penutup -->
+            <div class="card shadow-xs border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h3 class="card-title fw-bold text-dark mb-0">
+                        <i class="ti ti-message-heart text-indigo me-2"></i> Kata Pengantar &amp; Doa Penutup
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Kata Pengantar / Kisah Cinta Singkat</label>
+                        <textarea class="form-control" 
+                                  id="description" 
+                                  name="description" 
+                                  rows="3" 
+                                  placeholder="Tuliskan salam hangat atau cerita singkat pertemuan Anda berdua...">{{ old('description', invitation.description ?? '') }}</textarea>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label" for="closing_message">Doa &amp; Pesan Penutup</label>
+                        <textarea class="form-control" 
+                                  id="closing_message" 
+                                  name="closing_message" 
+                                  rows="2" 
+                                  placeholder="Contoh: Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.">{{ old('closing_message', invitation.closing_message ?? '') }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Pilihan Desain & Penerbitan -->
+        <div class="col-lg-4">
+            <!-- Kartu Pilihan Template -->
+            <div class="card shadow-xs border-0 mb-4 sticky-top" style="top: 1rem;">
+                <div class="card-header bg-white py-3">
+                    <h3 class="card-title fw-bold text-dark mb-0">
+                        <i class="ti ti-palette text-primary me-2"></i> Desain &amp; Tema Visual
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <!-- Template Selector -->
+                    <div class="mb-4">
+                        <label class="form-label required" for="template_id">Pilih Template Wedding</label>
+                        <select class="form-select" id="template_id" name="template_id" required>
+                            {% for tpl in templates %}
+                                <option value="{{ tpl.id }}" 
+                                    {{ old('template_id', invitation.template_id ?? selected_template_id ?? 1) == tpl.id ? 'selected' : '' }}>
+                                    {{ tpl.name }} ({{ tpl.category_name ?? 'Wedding' }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Theme Color Radio Selector -->
+                    <div class="mb-4">
+                        <label class="form-label required">Aksen Warna Tema</label>
+                        <div class="d-flex flex-column gap-2">
+                            <label class="form-check form-check-inline m-0 p-2 border rounded-2 d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="theme_color" value="rose" 
+                                    {{ old('theme_color', invitation.theme_color ?? 'rose') == 'rose' ? 'checked' : '' }}>
+                                <span class="avatar avatar-xs rounded-circle me-2" style="background-color: #d946ef;"></span>
+                                <span class="form-check-label fw-semibold">Rose Romantic</span>
+                            </label>
+
+                            <label class="form-check form-check-inline m-0 p-2 border rounded-2 d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="theme_color" value="emerald" 
+                                    {{ old('theme_color', invitation.theme_color ?? '') == 'emerald' ? 'checked' : '' }}>
+                                <span class="avatar avatar-xs rounded-circle me-2" style="background-color: #10b981;"></span>
+                                <span class="form-check-label fw-semibold">Emerald Botanical</span>
+                            </label>
+
+                            <label class="form-check form-check-inline m-0 p-2 border rounded-2 d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="theme_color" value="gold" 
+                                    {{ old('theme_color', invitation.theme_color ?? '') == 'gold' ? 'checked' : '' }}>
+                                <span class="avatar avatar-xs rounded-circle me-2" style="background-color: #f59e0b;"></span>
+                                <span class="form-check-label fw-semibold">Royal Gold Luxury</span>
+                            </label>
+
+                            <label class="form-check form-check-inline m-0 p-2 border rounded-2 d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="theme_color" value="classic" 
+                                    {{ old('theme_color', invitation.theme_color ?? '') == 'classic' ? 'checked' : '' }}>
+                                <span class="avatar avatar-xs rounded-circle me-2" style="background-color: #1e293b;"></span>
+                                <span class="form-check-label fw-semibold">Classic Monochrome</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Status Undangan Selector -->
+                    <div class="mb-4">
+                        <label class="form-label required" for="status">Status Undangan</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="draft" {{ old('status', invitation.status ?? 'draft') == 'draft' ? 'selected' : '' }}>
+                                📁 Draft (Belum Publik)
+                            </option>
+                            <option value="published" {{ old('status', invitation.status ?? '') == 'published' ? 'selected' : '' }}>
+                                🚀 Terpublikasi (Dapat Diakses Publik)
+                            </option>
+                            <option value="unpublished" {{ old('status', invitation.status ?? '') == 'unpublished' ? 'selected' : '' }}>
+                                🔒 Nonaktif (Tutup Akses)
+                            </option>
+                        </select>
+                        <small class="form-hint">Undangan berstatus 'Terpublikasi' dapat langsung diakses publik melalui tautan URL slug.</small>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-grid gap-2 pt-2 border-top">
+                        <button type="submit" class="btn btn-primary py-2 d-inline-flex align-items-center justify-content-center shadow-xs">
+                            <i class="ti ti-device-floppy me-2"></i> {{ invitation.id ? 'Perbarui Undangan' : 'Simpan Undangan' }}
+                        </button>
+                        <a href="{{ url('/dashboard/invitations') }}" class="btn btn-outline-secondary py-2">
+                            Batal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
