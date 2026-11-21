@@ -1,0 +1,26 @@
+{% extends "layouts/base.twig" %}
+
+{% block body_class %}bg-light d-flex flex-column min-vh-100 justify-content-center align-items-center py-4{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 480px;">
+    <div class="text-center mb-4">
+        <a href="{{ url('/') }}" class="text-decoration-none">
+            <h2 class="fw-bold text-primary mb-1">Invitara</h2>
+            <p class="text-muted small">Wedding Digital Invitation Maker</p>
+        </a>
+    </div>
+
+    {% include "components/alerts.twig" %}
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+            {% block auth_content %}{% endblock %}
+        </div>
+    </div>
+    
+    <div class="text-center mt-4 text-muted small">
+        &copy; {{ "now"|date("Y") }} Invitara. Hak cipta dilindungi.
+    </div>
+</div>
+{% endblock %}

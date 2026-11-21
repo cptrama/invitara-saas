@@ -1,0 +1,32 @@
+{% extends "layouts/auth.twig" %}
+
+{% block auth_content %}
+<h4 class="card-title fw-bold text-center mb-4">Masuk ke Invitara</h4>
+
+<form action="{{ url('/login') }}" method="POST">
+    {{ csrf_field() }}
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required autofocus>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Kata Sandi</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan kata sandi" required>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Masuk</button>
+</form>
+
+<div class="text-center mt-4">
+    <span class="text-muted small">Belum memiliki akun?</span>
+    <a href="{{ url('/register') }}" class="small fw-semibold text-decoration-none ms-1">Daftar sekarang</a>
+</div>
+{% endblock %}

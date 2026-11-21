@@ -1,0 +1,116 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 fw-bold mb-1">Dashboard</h2>
+        <p class="text-muted small mb-0">Ringkasan status undangan dan respons RSVP pernikahan Anda</p>
+    </div>
+    <div>
+        <a href="{{ url('/dashboard/invitations/create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Buat Undangan Baru
+        </a>
+    </div>
+</div>
+
+<!-- Stats Counter -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Total Undangan</div>
+                <div class="h3 fw-bold text-dark mb-0">{{ stats.total ?? 0 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Draft</div>
+                <div class="h3 fw-bold text-secondary mb-0">{{ stats.drafts ?? 0 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Terpublikasi</div>
+                <div class="h3 fw-bold text-success mb-0">{{ stats.published ?? 0 }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Total RSVP</div>
+                <div class="h3 fw-bold text-primary mb-0">{{ stats.total_rsvps ?? 0 }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Invitations List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="card-title fw-bold mb-0">Daftar Undangan Saya</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Judul & Pasangan</th>
+                        <th>Template</th>
+                        <th>Tanggal Acara</th>
+                        <th>Status</th>
+                        <th>RSVP</th>
+                        <th class="text-end pe-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in invitations %}
+                        <tr>
+                            <td class="ps-3">
+                                <div class="fw-bold">{{ inv.title }}</div>
+                                <div class="small text-muted">{{ inv.partner_one_name }} &amp; {{ inv.partner_two_name }}</div>
+                            </td>
+                            <td>{{ inv.template_name }}</td>
+                            <td>{{ inv.event_date }}</td>
+                            <td>
+                                {% if inv.status == 'published' %}
+                                    <span class="badge bg-success">Terbit</span>
+                                {% elseif inv.status == 'draft' %}
+                                    <span class="badge bg-secondary">Draft</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Nonaktif</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div>{{ inv.total_rsvps }} respons</div>
+                                <div class="small text-muted">{{ inv.total_attending_guests }} orang hadir</div>
+                            </td>
+                            <td class="text-end pe-3">
+                                {% if inv.status == 'published' %}
+                                    <a href="{{ url('/i/' ~ inv.slug) }}" target="_blank" class="btn btn-sm btn-outline-success me-1" title="Lihat Halaman Publik">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                {% endif %}
+                                <a href="{{ url('/dashboard/invitations/' ~ inv.id ~ '/edit') }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                                Belum ada undangan. Mulai buat undangan pertama Anda!
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
