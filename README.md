@@ -117,12 +117,55 @@ php database/seed.php
 
 ---
 
-## 🧪 Menjalankan Pengujian Backend
+## 🧪 Menjalankan Rangkaian Pengujian Otomatis (Test Suites)
 
-Jalankan rangkaian test otomatis untuk memvalidasi koneksi PDO, migrasi, seeder, register/login, CSRF, validasi, dan proteksi kepemilikan data:
+Invitara dilengkapi dengan 4 rangkaian automated tests (total 37 uji otomatis) yang memvalidasi integritas seluruh modul aplikasi:
+
 ```bash
+# 1. Test Backend, Database, Auth, CSRF, Validasi & Keamanan (Anggota 1)
 php tests/test_backend.php
+
+# 2. Test Rendering Seluruh 12 View Twig, Tabler UI & Template Wedding (Anggota 2)
+php tests/test_frontend_views.php
+
+# 3. Test Alur Lengkap CRUD Undangan, Slug Unik, & Manajemen RSVP (Anggota 3)
+php tests/test_invitation_flow.php
+
+# 4. Test Kompatibilitas Flight Engine HTTP Controller Dispatch
+php tests/test_http_controllers.php
 ```
+
+---
+
+## ✨ Fitur-Fitur Utama Platform (v1.0.0 Stable Release)
+
+1. **Publik & Landing Page:**
+   - Landing page modern responsif berbasis Tabler UI & Bootstrap 5.
+   - Galeri template undangan interaktif dengan simulator preview live.
+   - 3 Desain Template Pernikahan MVP: *Floral Elegance*, *Modern Minimalist*, dan *Traditional Gold*.
+
+2. **Autentikasi & Akun Pengguna:**
+   - Pendaftaran akun baru, login sesi aman, dan proteksi multi-role (`user` dan `admin`).
+   - Manajemen profil pengguna & fitur ganti kata sandi berkeamanan tinggi.
+
+3. **Manajemen Undangan (Invitations):**
+   - Pembuatan dan pengelolaan undangan melalui form-based editor.
+   - Generator slug unik ramah SEO dengan proteksi tabrakan (*collision handling*).
+   - Pengaturan status publikasi (*Draft* vs *Published*) untuk menjaga kerahasiaan sebelum acara siap disebar.
+
+4. **Sistem Konfirmasi Tamu (RSVP):**
+   - Halaman publik `/i/{slug}` yang dapat diakses tamu undangan secara mobile-friendly.
+   - Form konfirmasi kehadiran (*Hadir / Tidak Hadir*), jumlah tamu, serta ucapan dan doa restu.
+   - Rekapitulasi otomatis statistik RSVP pada dashboard pemilik undangan.
+
+5. **Panel Admin & Monitoring Platform:**
+   - Dashboard monitoring statistik platform (total pengguna, undangan, RSVP, dan tamu).
+   - Pengelolaan status aktif/non-aktif template pernikahan secara real-time.
+
+6. **Keamanan Sistem (Security Hardening):**
+   - Token CSRF di seluruh form mutasi state (`POST`, `PUT`, `DELETE`).
+   - `OwnershipMiddleware` yang memastikan pengguna hanya dapat mengakses dan mengelola undangannya sendiri.
+   - Sanitasi upload file dengan validasi MIME berbasis `finfo` serta blokade eksekusi skrip di folder `public/uploads/`.
 
 ---
 
