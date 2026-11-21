@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
+  base: '/build/',
   publicDir: false,
   build: {
     outDir: 'public/build',
