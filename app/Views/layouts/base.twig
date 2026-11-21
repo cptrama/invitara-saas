@@ -6,14 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}{{ page_title ?? 'Invitara' }}{% endblock %} - {{ app_name }}</title>
     <!-- Compiled Tabler UI & Icons via Vite -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}?v=1.0.1">
     {% block styles %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
     {% block content %}{% endblock %}
 
     <!-- Compiled Tabler UI & Bootstrap JS via Vite -->
-    <script src="{{ asset('build/assets/app.js') }}"></script>
+    <script src="{{ asset('build/assets/app.js') }}?v=1.0.1"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
