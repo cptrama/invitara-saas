@@ -1,0 +1,156 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/dashboard/invitations') }}" class="text-decoration-none">Undangan Saya</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Buat Baru</li>
+        </ol>
+    </nav>
+    <h2 class="h3 fw-bold mb-1">Buat Undangan Baru</h2>
+    <p class="text-muted small mb-0">Pilih template desain yang sesuai dan lengkapi rincian acara pernikahan Anda.</p>
+</div>
+
+<form action="{{ url('/dashboard/invitations') }}" method="POST">
+    {{ csrf_field() }}
+
+    <!-- Langkah 1: Pemilihan Template -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">
+                <span class="badge bg-primary me-2">1</span> Pilih Template Desain
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                {% for tmpl in templates %}
+                    <div class="col-md-4">
+                        <label class="card h-100 border text-center p-3 cursor-pointer template-card position-relative {% if old('template_id', selected_template_id) == tmpl.id %}border-primary bg-light shadow-sm{% endif %}" style="cursor: pointer;">
+                            <input type="radio" name="template_id" value="{{ tmpl.id }}" class="form-check-input position-absolute top-0 end-0 m-3" {% if old('template_id', selected_template_id) == tmpl.id %}checked{% endif %} required>
+                            <div class="py-4">
+                                <i class="bi bi-palette2 fs-1 text-primary mb-2 d-block"></i>
+                                <h6 class="fw-bold mb-1">{{ tmpl.name }}</h6>
+                                <p class="text-muted small mb-0">{{ tmpl.description }}</p>
+                            </div>
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Langkah 2: Informasi Mempelai & Acara -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">
+                <span class="badge bg-primary me-2">2</span> Informasi Pasangan &amp; Acara
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Judul Undangan <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control" placeholder="Contoh: The Wedding of Rama &amp; Sinta" value="{{ old('title') }}" required>
+                    <div class="form-text">Judul yang akan ditampilkan pada undangan dan tab peramban.</div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Pasangan Pertama (Pria/Wanita) <span class="text-danger">*</span></label>
+                    <input type="text" name="partner_one_name" class="form-control" placeholder="Nama Lengkap / Panggilan" value="{{ old('partner_one_name') }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Pasangan Kedua (Wanita/Pria) <span class="text-danger">*</span></label>
+                    <input type="text" name="partner_two_name" class="form-control" placeholder="Nama Lengkap / Panggilan" value="{{ old('partner_two_name') }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Tanggal Acara <span class="text-danger">*</span></label>
+                    <input type="date" name="event_date" class="form-control" value="{{ old('event_date') }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Waktu Acara</label>
+                    <input type="text" name="event_time" class="form-control" placeholder="09:00" value="{{ old('event_time') }}">
+                    <div class="form-text">Format JJ:MM (contoh: 09:00 atau 10:30).</div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Zona Waktu</label>
+                    <select name="timezone" class="form-select">
+                        <option value="Asia/Jakarta" {% if old('timezone', 'Asia/Jakarta') == 'Asia/Jakarta' %}selected{% endif %}>WIB (Asia/Jakarta)</option>
+                        <option value="Asia/Makassar" {% if old('timezone') == 'Asia/Makassar' %}selected{% endif %}>WITA (Asia/Makassar)</option>
+                        <option value="Asia/Jayapura" {% if old('timezone') == 'Asia/Jayapura' %}selected{% endif %}>WIT (Asia/Jayapura)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Tempat / Venue</label>
+                    <input type="text" name="venue_name" class="form-control" placeholder="Gedung Pernikahan / Hotel / Kediaman" value="{{ old('venue_name') }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">URL Google Maps (Lokasi Acara)</label>
+                    <input type="url" name="maps_url" class="form-control" placeholder="https://maps.app.goo.gl/..." value="{{ old('maps_url') }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Alamat Lengkap Venue</label>
+                    <textarea name="venue_address" class="form-control" rows="2" placeholder="Jl. Mawar No. 12, Kelurahan, Kecamatan, Kota...">{{ old('venue_address') }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Langkah 3: Personalisasi Desain & Pesan -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">
+                <span class="badge bg-primary me-2">3</span> Personalisasi &amp; Teks Penutup
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Pilihan Warna Tema</label>
+                    <select name="theme_color" class="form-select">
+                        <option value="rose" {% if old('theme_color', 'rose') == 'rose' %}selected{% endif %}>Rose Gold / Merah Muda</option>
+                        <option value="emerald" {% if old('theme_color') == 'emerald' %}selected{% endif %}>Emerald Green / Hijau Alami</option>
+                        <option value="gold" {% if old('theme_color') == 'gold' %}selected{% endif %}>Royal Gold / Keemasan</option>
+                        <option value="classic" {% if old('theme_color') == 'classic' %}selected{% endif %}>Classic Monochrome / Hitam Putih</option>
+                        <option value="blue" {% if old('theme_color') == 'blue' %}selected{% endif %}>Ocean Blue / Biru Elegan</option>
+                        <option value="purple" {% if old('theme_color') == 'purple' %}selected{% endif %}>Lavender / Ungu Lembut</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Slug URL Kustom (Opsional)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">{{ url('/i/') }}/</span>
+                        <input type="text" name="slug" class="form-control" placeholder="rama-sinta" value="{{ old('slug') }}">
+                    </div>
+                    <div class="form-text">Biarkan kosong agar sistem membuatkan slug unik otomatis dari nama mempelai.</div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Cerita Singkat Pasangan (Love Story)</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Ceritakan bagaimana Anda berdua bertemu hingga memutuskan melangkah ke jenjang pernikahan...">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Pesan Penutup</label>
+                    <textarea name="closing_message" class="form-control" rows="2" placeholder="Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir...">{{ old('closing_message') }}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3 text-end">
+            <a href="{{ url('/dashboard/invitations') }}" class="btn btn-outline-secondary me-2">Batal</a>
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-save me-1"></i> Simpan sebagai Draft
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
