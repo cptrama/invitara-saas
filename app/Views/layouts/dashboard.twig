@@ -33,6 +33,9 @@
                         <span class="dropdown-item-text small text-muted">{{ auth_user().name }}</span>
                         <span class="dropdown-item-text small text-muted">{{ auth_user().email }}</span>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('/dashboard/profile') }}">
+                            <i class="ti ti-user-cog me-2"></i> Pengaturan Profil
+                        </a>
                         <form action="{{ url('/logout') }}" method="POST" class="m-0">
                             {{ csrf_field() }}
                             <button type="submit" class="dropdown-item text-danger">
@@ -68,6 +71,14 @@
                                 <i class="ti ti-palette fs-2"></i>
                             </span>
                             <span class="nav-link-title">Galeri Template</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/dashboard/profile') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-user-cog fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Pengaturan Profil</span>
                         </a>
                     </li>
                     <li class="nav-item mt-2">
@@ -125,6 +136,9 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('/dashboard/invitations') }}">
                                 <i class="ti ti-mail me-2"></i> Undangan Saya
+                            </a>
+                            <a class="dropdown-item" href="{{ url('/dashboard/profile') }}">
+                                <i class="ti ti-user-cog me-2"></i> Pengaturan Profil
                             </a>
                             <div class="dropdown-divider"></div>
                             <form action="{{ url('/logout') }}" method="POST" class="m-0">

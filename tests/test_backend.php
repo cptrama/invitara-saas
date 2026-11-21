@@ -274,6 +274,80 @@ it('renders Twig templates without syntax or loader errors', function () {
     assertTrue(str_contains($registerHtml, 'name="password_confirmation"'), 'Register form contains password confirmation');
 });
 
+// 10. Profile Management & Password Change (PRD 6.11)
+it('updates user profile and validates password change security', function () {
+    $userRepo = new UserRepository();
+    $authService = new AuthService($userRepo);
+
+    // Register a temp user for profile testing
+    $testEmail = 'profile_test_' . time() . '@example.com';
+    $user = $authService->register([
+        'name' => 'Original Name',
+        'email' => $testEmail,
+        'password' => 'oldpassword123',
+    ]);
+
+    // Update name
+    $userRepo->update($user['id'], ['name' => 'Updated Name']);
+    $updatedUser = $userRepo->findById($user['id']);
+    assertEquals('Updated Name', $updatedUser['name']);
+
+    // Check old password verification
+    $userWithPass = $userRepo->findByIdWithPassword($user['id']);
+    assertTrue(password_verify('oldpassword123', $userWithPass['password']), 'Old password matches');
+    assertFalse(password_verify('wrongpassword', $userWithPass['password']), 'Wrong password rejected');
+
+    // Change password
+    $newHash = password_hash('newpassword456', PASSWORD_DEFAULT);
+    $userRepo->updatePassword($user['id'], $newHash);
+    $userWithNewPass = $userRepo->findByIdWithPassword($user['id']);
+    assertTrue(password_verify('newpassword456', $userWithNewPass['password']), 'New password verified');
+});
+
+// 11. UploadService Security & Validation (PRD 8.12)
+it('UploadService validates MIME types and protects against directory traversal', function () {
+    $uploader = new \App\Services\UploadService();
+
+    // Test rejection of non-image file
+    $tempTextFile = tempnam(sys_get_temp_dir(), 'test_php');
+    file_put_contents($tempTextFile, '<?php echo "evil"; ?>');
+
+    $rejected = false;
+    try {
+        $uploader->upload([
+            'name' => 'evil.php',
+            'type' => 'text/plain',
+            'tmp_name' => $tempTextFile,
+            'error' => UPLOAD_ERR_OK,
+            'size' => filesize($tempTextFile),
+        ], 'test');
+    } catch (\RuntimeException $e) {
+        $rejected = true;
+    }
+    @unlink($tempTextFile);
+    assertTrue($rejected, 'Non-image file must be rejected by UploadService');
+
+    // Test directory traversal prevention on delete
+    assertFalse($uploader->delete('../../../config/database.php'), 'Directory traversal must be blocked');
+    assertFalse($uploader->delete('/etc/passwd'), 'Non-upload path must be blocked');
+});
+
+// 12. Profile Twig Rendering
+it('renders profile Twig template with Tabler UI elements and CSRF', function () {
+    $profileHtml = View::render('dashboard/profile.twig', [
+        'page_title' => 'Pengaturan Profil',
+        'user' => [
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'role' => 'user',
+            'created_at' => '2026-01-01 10:00:00',
+        ],
+    ]);
+    assertTrue(str_contains($profileHtml, 'Informasi Akun'), 'Profile page contains account info card');
+    assertTrue(str_contains($profileHtml, 'Ubah Kata Sandi'), 'Profile page contains change password card');
+    assertTrue(str_contains($profileHtml, '_csrf_token'), 'Profile forms contain CSRF token');
+});
+
 echo "\n=======================================================\n";
 echo " TEST RESULTS: {$passed} PASSED, {$failed} FAILED\n";
 echo "=======================================================\n\n";

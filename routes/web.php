@@ -3,6 +3,7 @@
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
+use App\Controllers\ProfileController;
 use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
@@ -28,6 +29,11 @@ Flight::route('GET /logout', [AuthController::class, 'logout'])->addMiddleware(n
 Flight::group('/dashboard', function () {
     Flight::route('GET /', [DashboardController::class, 'index']);
     Flight::route('GET /overview', [DashboardController::class, 'index']);
+
+    // Profile Settings (PRD 6.11)
+    Flight::route('GET /profile', [ProfileController::class, 'showProfile']);
+    Flight::route('POST /profile', [ProfileController::class, 'updateProfile'])->addMiddleware(new CsrfMiddleware());
+    Flight::route('POST /profile/password', [ProfileController::class, 'updatePassword'])->addMiddleware(new CsrfMiddleware());
 
     // Placeholders and Ownership Route contracts for Anggota 3
     Flight::route('GET /invitations', function () {
