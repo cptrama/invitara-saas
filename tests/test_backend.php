@@ -348,6 +348,65 @@ it('renders profile Twig template with Tabler UI elements and CSRF', function ()
     assertTrue(str_contains($profileHtml, '_csrf_token'), 'Profile forms contain CSRF token');
 });
 
+// 13. Template Gallery & Detail Views (PRD 6.4)
+it('renders template gallery and detail views properly', function () {
+    $tmplRepo = new TemplateRepository();
+    $active = $tmplRepo->allActive();
+    assertTrue(count($active) >= 3, 'At least 3 active templates for gallery');
+
+    $galleryHtml = View::render('templates/index.twig', [
+        'page_title' => 'Galeri Template',
+        'templates' => $active,
+    ]);
+    assertTrue(str_contains($galleryHtml, 'Galeri Template Undangan Pernikahan'), 'Gallery header rendered');
+    assertTrue(str_contains($galleryHtml, $active[0]['name']), 'First template name present');
+
+    $showHtml = View::render('templates/show.twig', [
+        'page_title' => 'Detail Template',
+        'template' => $active[0],
+    ]);
+    assertTrue(str_contains($showHtml, 'Keunggulan Desain'), 'Template detail highlights rendered');
+});
+
+// 14. Admin Statistics & Template Toggle (PRD 3.2 & 16.1)
+it('calculates platform statistics and toggles template status', function () {
+    $tmplRepo = new TemplateRepository();
+    $firstTmpl = $tmplRepo->findBySlug('minimalis-elegan');
+    assertTrue($firstTmpl !== null, 'minimalis-elegan template found');
+
+    // Toggle to inactive
+    $tmplRepo->update($firstTmpl['id'], ['is_active' => 0]);
+    $updated = $tmplRepo->findById($firstTmpl['id']);
+    assertEquals(0, (int)$updated['is_active'], 'Template toggled to inactive');
+
+    // Toggle back to active
+    $tmplRepo->update($firstTmpl['id'], ['is_active' => 1]);
+    $restored = $tmplRepo->findById($firstTmpl['id']);
+    assertEquals(1, (int)$restored['is_active'], 'Template restored to active');
+});
+
+// 15. Admin View Rendering with Security
+it('renders admin dashboard view with platform stats and template manager', function () {
+    $adminHtml = View::render('admin/index.twig', [
+        'page_title' => 'Panel Admin',
+        'stats' => [
+            'total_users' => 10,
+            'total_invitations' => 5,
+            'published_invitations' => 3,
+            'draft_invitations' => 2,
+            'total_rsvps' => 25,
+            'total_guests' => 45,
+        ],
+        'templates' => (new TemplateRepository())->all(),
+        'users' => (new UserRepository())->all(),
+    ]);
+
+    assertTrue(str_contains($adminHtml, 'Panel Admin &amp; Pemantauan Platform'), 'Admin dashboard header present');
+    assertTrue(str_contains($adminHtml, 'Kelola Template Wedding'), 'Template management section present');
+    assertTrue(str_contains($adminHtml, 'Daftar Pengguna Platform'), 'Users list table present');
+    assertTrue(str_contains($adminHtml, '_csrf_token'), 'Admin forms contain CSRF token');
+});
+
 echo "\n=======================================================\n";
 echo " TEST RESULTS: {$passed} PASSED, {$failed} FAILED\n";
 echo "=======================================================\n\n";

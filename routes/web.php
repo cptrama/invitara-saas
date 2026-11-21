@@ -1,9 +1,11 @@
 <?php
 
+use App\Controllers\AdminController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Controllers\ProfileController;
+use App\Controllers\TemplateController;
 use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
@@ -12,6 +14,8 @@ use App\Middleware\OwnershipMiddleware;
 
 // Public Routes
 Flight::route('GET /', [HomeController::class, 'index']);
+Flight::route('GET /templates', [TemplateController::class, 'index']);
+Flight::route('GET /templates/@slug', [TemplateController::class, 'show']);
 
 // Authentication Routes (Guest Only)
 Flight::group('', function () {
@@ -50,6 +54,12 @@ Flight::group('/dashboard', function () {
     })->addMiddleware(new OwnershipMiddleware());
 
 }, [new AuthMiddleware()]);
+
+// Admin Platform Management & Monitoring (PRD 3.2 & 16.1)
+Flight::group('/admin', function () {
+    Flight::route('GET /', [AdminController::class, 'index']);
+    Flight::route('POST /templates/@id:[0-9]+/toggle', [AdminController::class, 'toggleTemplate'])->addMiddleware(new CsrfMiddleware());
+}, [new AuthMiddleware(), new AdminMiddleware()]);
 
 // 404 Route handler
 Flight::map('notFound', function () {

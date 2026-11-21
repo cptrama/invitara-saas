@@ -81,6 +81,16 @@
                             <span class="nav-link-title">Pengaturan Profil</span>
                         </a>
                     </li>
+                    {% if is_admin() %}
+                    <li class="nav-item">
+                        <a class="nav-link text-purple" href="{{ url('/admin') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block text-purple">
+                                <i class="ti ti-shield-lock fs-2"></i>
+                            </span>
+                            <span class="nav-link-title text-purple fw-semibold">Panel Admin</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item mt-2">
                         <a class="nav-link text-primary fw-semibold" href="{{ url('/dashboard/invitations/create') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block text-primary">
@@ -140,6 +150,11 @@
                             <a class="dropdown-item" href="{{ url('/dashboard/profile') }}">
                                 <i class="ti ti-user-cog me-2"></i> Pengaturan Profil
                             </a>
+                            {% if is_admin() %}
+                            <a class="dropdown-item text-purple fw-semibold" href="{{ url('/admin') }}">
+                                <i class="ti ti-shield-lock me-2"></i> Panel Admin
+                            </a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
                             <form action="{{ url('/logout') }}" method="POST" class="m-0">
                                 {{ csrf_field() }}
