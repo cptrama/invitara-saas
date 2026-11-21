@@ -1,0 +1,14 @@
+/vendor/
+/node_modules/
+.env
+/storage/logs/*.log
+/storage/cache/*
+!/storage/cache/.gitkeep
+!/storage/logs/.gitkeep
+/public/uploads/*
+!/public/uploads/.gitkeep
+/public/build/*
+!/public/build/.gitkeep
+.phpunit.result.cache
+.DS_Store
+Thumbs.db
