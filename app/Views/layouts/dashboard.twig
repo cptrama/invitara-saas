@@ -1,48 +1,170 @@
 {% extends "layouts/base.twig" %}
 
+{% block body_class %}theme-light{% endblock %}
+
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid px-4">
-        <a class="navbar-brand fw-bold" href="{{ url('/dashboard') }}">
-            <i class="bi bi-envelope-heart me-1"></i> Invitara Dashboard
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navDashboard">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navDashboard">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ url('/dashboard') }}"><i class="bi bi-grid-fill me-1"></i> Overview</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/dashboard/invitations') }}"><i class="bi bi-card-text me-1"></i> Undangan Saya</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle me-1"></i> {{ auth_user().name }}
+<div class="page">
+    <!-- Sidebar Navigasi Tabler -->
+    <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Brand Logo -->
+            <h1 class="navbar-brand navbar-brand-autodark px-2 py-3 mb-0">
+                <a href="{{ url('/dashboard') }}" class="d-flex align-items-center text-decoration-none text-white">
+                    <span class="avatar avatar-sm bg-primary-lt text-primary rounded me-2">
+                        <i class="ti ti-mail-heart fs-2"></i>
+                    </span>
+                    <span class="fw-bold fs-2 tracking-tight">Invitara</span>
+                </a>
+            </h1>
+
+            <!-- User Menu for Mobile -->
+            <div class="navbar-nav flex-row d-lg-none">
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="User menu">
+                        <span class="avatar avatar-sm bg-primary text-white rounded-circle fw-bold">
+                            {{ auth_user().name ? auth_user().name|slice(0, 1)|upper : 'U' }}
+                        </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow">
-                        <li><span class="dropdown-item-text small text-muted">{{ auth_user().email }}</span></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form action="{{ url('/logout') }}" method="POST" class="d-inline">
+                    <div class="dropdown-menu dropdown-menu-end shadow">
+                        <span class="dropdown-item-text small text-muted">{{ auth_user().name }}</span>
+                        <span class="dropdown-item-text small text-muted">{{ auth_user().email }}</span>
+                        <div class="dropdown-divider"></div>
+                        <form action="{{ url('/logout') }}" method="POST" class="m-0">
+                            {{ csrf_field() }}
+                            <button type="submit" class="dropdown-item text-danger">
+                                <i class="ti ti-logout me-2"></i> Keluar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Menu Content -->
+            <div class="collapse navbar-collapse" id="sidebar-menu">
+                <ul class="navbar-nav pt-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/dashboard') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-layout-dashboard fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/dashboard/invitations') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-mail fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Undangan Saya</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/templates') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-palette fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Galeri Template</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-primary fw-semibold" href="{{ url('/dashboard/invitations/create') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block text-primary">
+                                <i class="ti ti-circle-plus fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Buat Undangan Baru</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mt-auto pt-3 border-top border-secondary-subtle">
+                        <a class="nav-link" href="{{ url('/') }}" target="_blank">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block text-muted">
+                                <i class="ti ti-external-link fs-2"></i>
+                            </span>
+                            <span class="nav-link-title text-muted">Lihat Landing Page</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <div class="page-wrapper">
+        <!-- Header Atas Tabler (Desktop) -->
+        <header class="navbar navbar-expand-md d-none d-lg-flex d-print-none bg-white border-bottom">
+            <div class="container-xl">
+                <div class="navbar-nav flex-row">
+                    <div class="nav-item d-flex align-items-center text-muted small">
+                        <i class="ti ti-shield-check text-success me-1"></i> SaaS Wedding Invitation Management
+                    </div>
+                </div>
+
+                <!-- User Profile & Dropdown Logout Aman -->
+                <div class="navbar-nav flex-row ms-auto">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Menu Pengguna">
+                            <span class="avatar avatar-sm bg-primary text-white rounded-circle fw-bold shadow-xs">
+                                {{ auth_user().name ? auth_user().name|slice(0, 1)|upper : 'U' }}
+                            </span>
+                            <div class="d-none d-xl-block ps-2">
+                                <div class="fw-semibold">{{ auth_user().name }}</div>
+                                <div class="mt-1 small text-muted">{{ auth_user().email }}</div>
+                            </div>
+                            <i class="ti ti-chevron-down ms-2 text-muted small d-none d-xl-inline"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow shadow border-0 py-2">
+                            <div class="dropdown-header">
+                                <div class="fw-bold">{{ auth_user().name }}</div>
+                                <div class="text-muted small">{{ auth_user().email }}</div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ url('/dashboard') }}">
+                                <i class="ti ti-dashboard me-2"></i> Dashboard Overview
+                            </a>
+                            <a class="dropdown-item" href="{{ url('/dashboard/invitations') }}">
+                                <i class="ti ti-mail me-2"></i> Undangan Saya
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <form action="{{ url('/logout') }}" method="POST" class="m-0">
                                 {{ csrf_field() }}
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right me-1"></i> Keluar
+                                    <i class="ti ti-logout me-2"></i> Keluar
                                 </button>
                             </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-<div class="container py-4">
-    {% include "components/alerts.twig" %}
-    {% block dashboard_content %}{% endblock %}
+        <!-- Area Konten Utama Dashboard -->
+        <div class="page-body">
+            <div class="container-xl py-3">
+                {% include "components/alerts.twig" %}
+                {% block dashboard_content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- Footer Dashboard Tabler -->
+        <footer class="footer footer-transparent d-print-none py-3 border-top">
+            <div class="container-xl">
+                <div class="row text-center align-items-center flex-row-reverse">
+                    <div class="col-lg-auto ms-lg-auto">
+                        <ul class="list-inline list-inline-dots mb-0">
+                            <li class="list-inline-item text-muted">Invitara SaaS Platform</li>
+                            <li class="list-inline-item text-muted">v1.0.0</li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                        <span class="text-muted small">
+                            &copy; {{ "now"|date("Y") }} <strong>Invitara</strong>. Create Your Moment, Share Your Invitation.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 </div>
 {% endblock %}

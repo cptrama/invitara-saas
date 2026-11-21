@@ -1,26 +1,35 @@
 {% extends "layouts/base.twig" %}
 
-{% block body_class %}bg-light d-flex flex-column min-vh-100 justify-content-center align-items-center py-4{% endblock %}
+{% block body_class %}d-flex flex-column bg-body-tertiary min-vh-100{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 480px;">
-    <div class="text-center mb-4">
-        <a href="{{ url('/') }}" class="text-decoration-none">
-            <h2 class="fw-bold text-primary mb-1">Invitara</h2>
-            <p class="text-muted small">Wedding Digital Invitation Maker</p>
-        </a>
-    </div>
-
-    {% include "components/alerts.twig" %}
-
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-body p-4">
-            {% block auth_content %}{% endblock %}
+<div class="page page-center py-4">
+    <div class="container container-tight py-4">
+        <!-- Logo & Header Brand -->
+        <div class="text-center mb-4">
+            <a href="{{ url('/') }}" class="navbar-brand navbar-brand-autodark d-inline-flex align-items-center text-decoration-none">
+                <span class="avatar avatar-md bg-primary-lt text-primary rounded-circle me-2 shadow-xs">
+                    <i class="ti ti-mail-heart fs-1"></i>
+                </span>
+                <span class="h1 fw-bold mb-0 text-dark tracking-tight">Invitara</span>
+            </a>
+            <div class="text-muted small mt-1">Wedding Digital Invitation Maker</div>
         </div>
-    </div>
-    
-    <div class="text-center mt-4 text-muted small">
-        &copy; {{ "now"|date("Y") }} Invitara. Hak cipta dilindungi.
+
+        <!-- Flash Notification Placeholder -->
+        {% include "components/alerts.twig" %}
+
+        <!-- Card Auth Tabler -->
+        <div class="card card-md shadow-sm border-0 rounded-3">
+            <div class="card-body p-4 p-md-5">
+                {% block auth_content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- Footer Hak Cipta -->
+        <div class="text-center text-secondary mt-4 small">
+            &copy; {{ "now"|date("Y") }} <strong>Invitara</strong>. Hak cipta dilindungi.
+        </div>
     </div>
 </div>
 {% endblock %}

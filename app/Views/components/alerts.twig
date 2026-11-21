@@ -1,29 +1,41 @@
 {% if has_flash('success') %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        {% for msg in flash('success') %}
-            <div>{{ msg }}</div>
-        {% endfor %}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="ti ti-circle-check fs-2 me-2 flex-shrink-0"></i>
+            <div>
+                {% for msg in flash('success') %}
+                    <div>{{ msg }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
     </div>
 {% endif %}
 
 {% if has_flash('error') %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        {% for msg in flash('error') %}
-            <div>{{ msg }}</div>
-        {% endfor %}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="ti ti-alert-triangle fs-2 me-2 flex-shrink-0"></i>
+            <div>
+                {% for msg in flash('error') %}
+                    <div>{{ msg }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
     </div>
 {% endif %}
 
 {% if has_flash('info') %}
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        {% for msg in flash('info') %}
-            <div>{{ msg }}</div>
-        {% endfor %}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-info alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="ti ti-info-circle fs-2 me-2 flex-shrink-0"></i>
+            <div>
+                {% for msg in flash('info') %}
+                    <div>{{ msg }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
     </div>
 {% endif %}
