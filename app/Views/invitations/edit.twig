@@ -1,0 +1,252 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}" class="text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/dashboard/invitations') }}" class="text-decoration-none">Undangan Saya</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Undangan</li>
+        </ol>
+    </nav>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <h2 class="h3 fw-bold mb-0">{{ invitation.title }}</h2>
+                {% if invitation.status == 'published' %}
+                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Terbit</span>
+                {% elseif invitation.status == 'draft' %}
+                    <span class="badge bg-secondary"><i class="bi bi-pencil-square me-1"></i> Draft</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark"><i class="bi bi-pause-circle me-1"></i> Nonaktif</span>
+                {% endif %}
+            </div>
+            <p class="text-muted small mb-0">
+                Template: <strong>{{ invitation.template_name }}</strong> &bull; Dibuat: {{ invitation.created_at|date("d M Y") }}
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <!-- Tombol Kelola RSVP -->
+            <a href="{{ url('/dashboard/invitations/' ~ invitation.id ~ '/rsvps') }}" class="btn btn-outline-info btn-sm">
+                <i class="bi bi-people me-1"></i> Kelola RSVP
+            </a>
+
+            <!-- Tombol Publikasi / Nonaktifkan -->
+            {% if invitation.status == 'published' %}
+                <a href="{{ url('/i/' ~ invitation.slug) }}" target="_blank" class="btn btn-success btn-sm">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Buka Undangan
+                </a>
+                <form action="{{ url('/dashboard/invitations/' ~ invitation.id ~ '/unpublish') }}" method="POST" class="d-inline">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Apakah Anda yakin ingin menonaktifkan publikasi undangan ini? Tamu tidak akan dapat membukanya.');">
+                        <i class="bi bi-pause-circle me-1"></i> Batalkan Publikasi
+                    </button>
+                </form>
+            {% else %}
+                <form action="{{ url('/dashboard/invitations/' ~ invitation.id ~ '/publish') }}" method="POST" class="d-inline">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-rocket-takeoff me-1"></i> Publikasikan Sekarang
+                    </button>
+                </form>
+            {% endif %}
+
+            <!-- Tombol Hapus Undangan -->
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+{% if invitation.status == 'published' %}
+    <div class="alert alert-success d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 shadow-sm" role="alert">
+        <div>
+            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+            <span>Undangan Anda aktif di: </span>
+            <a href="{{ url('/i/' ~ invitation.slug) }}" target="_blank" class="fw-bold text-success text-decoration-underline ms-1">
+                {{ url('/i/' ~ invitation.slug) }}
+            </a>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-success" onclick="navigator.clipboard.writeText('{{ url('/i/' ~ invitation.slug) }}'); alert('Tautan berhasil disalin ke clipboard!');">
+            <i class="bi bi-clipboard me-1"></i> Salin Tautan
+        </button>
+    </div>
+{% endif %}
+
+<form action="{{ url('/dashboard/invitations/' ~ invitation.id ~ '/edit') }}" method="POST">
+    {{ csrf_field() }}
+
+    <!-- Section 1: Template & Tema -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">1. Template &amp; Warna Tema</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Pilih Template</label>
+                    <select name="template_id" class="form-select" required>
+                        {% for tmpl in templates %}
+                            <option value="{{ tmpl.id }}" {% if old('template_id', invitation.template_id) == tmpl.id %}selected{% endif %}>
+                                {{ tmpl.name }} ({{ tmpl.description }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Warna Aksen Tema</label>
+                    <select name="theme_color" class="form-select">
+                        <option value="rose" {% if old('theme_color', invitation.theme_color) == 'rose' %}selected{% endif %}>Rose Gold / Merah Muda</option>
+                        <option value="emerald" {% if old('theme_color', invitation.theme_color) == 'emerald' %}selected{% endif %}>Emerald Green / Hijau Alami</option>
+                        <option value="gold" {% if old('theme_color', invitation.theme_color) == 'gold' %}selected{% endif %}>Royal Gold / Keemasan</option>
+                        <option value="classic" {% if old('theme_color', invitation.theme_color) == 'classic' %}selected{% endif %}>Classic Monochrome / Hitam Putih</option>
+                        <option value="blue" {% if old('theme_color', invitation.theme_color) == 'blue' %}selected{% endif %}>Ocean Blue / Biru Elegan</option>
+                        <option value="purple" {% if old('theme_color', invitation.theme_color) == 'purple' %}selected{% endif %}>Lavender / Ungu Lembut</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Informasi Mempelai -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">2. Informasi Mempelai</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Judul Undangan <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control" value="{{ old('title', invitation.title) }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Pasangan Pertama <span class="text-danger">*</span></label>
+                    <input type="text" name="partner_one_name" class="form-control" value="{{ old('partner_one_name', invitation.partner_one_name) }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Pasangan Kedua <span class="text-danger">*</span></label>
+                    <input type="text" name="partner_two_name" class="form-control" value="{{ old('partner_two_name', invitation.partner_two_name) }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Waktu & Lokasi Acara -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">3. Waktu &amp; Lokasi Acara</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Tanggal Acara <span class="text-danger">*</span></label>
+                    <input type="date" name="event_date" class="form-control" value="{{ old('event_date', invitation.event_date) }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Waktu Acara</label>
+                    <input type="text" name="event_time" class="form-control" placeholder="09:00" value="{{ old('event_time', invitation.event_time) }}">
+                    <div class="form-text">Format JJ:MM (contoh: 09:00 atau 14:00).</div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Zona Waktu</label>
+                    <select name="timezone" class="form-select">
+                        <option value="Asia/Jakarta" {% if old('timezone', invitation.timezone) == 'Asia/Jakarta' %}selected{% endif %}>WIB (Asia/Jakarta)</option>
+                        <option value="Asia/Makassar" {% if old('timezone', invitation.timezone) == 'Asia/Makassar' %}selected{% endif %}>WITA (Asia/Makassar)</option>
+                        <option value="Asia/Jayapura" {% if old('timezone', invitation.timezone) == 'Asia/Jayapura' %}selected{% endif %}>WIT (Asia/Jayapura)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nama Tempat / Venue</label>
+                    <input type="text" name="venue_name" class="form-control" placeholder="Nama Gedung / Hotel" value="{{ old('venue_name', invitation.venue_name) }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">URL Google Maps</label>
+                    <input type="url" name="maps_url" class="form-control" placeholder="https://maps.app.goo.gl/..." value="{{ old('maps_url', invitation.maps_url) }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Alamat Lengkap</label>
+                    <textarea name="venue_address" class="form-control" rows="2">{{ old('venue_address', invitation.venue_address) }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Cerita & Pesan Penutup -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">4. Cerita Cinta &amp; Pesan Penutup</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Cerita Singkat (Love Story)</label>
+                    <textarea name="description" class="form-control" rows="3">{{ old('description', invitation.description) }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Pesan Penutup</label>
+                    <textarea name="closing_message" class="form-control" rows="2">{{ old('closing_message', invitation.closing_message) }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Pengaturan URL / Slug -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0">5. Pengaturan Tautan Undangan (Slug)</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">Slug URL Publik <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">{{ url('/i/') }}/</span>
+                        <input type="text" name="slug" class="form-control" value="{{ old('slug', invitation.slug) }}" required>
+                    </div>
+                    <div class="form-text">Hanya gunakan huruf kecil, angka, dan tanda hubung (-). Pastikan slug ini unik.</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3 text-end">
+            <a href="{{ url('/dashboard/invitations') }}" class="btn btn-outline-secondary me-2">Kembali ke Daftar</a>
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-save me-1"></i> Simpan Perubahan
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Modal Hapus Undangan -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-danger">Hapus Undangan Ini?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus undangan <strong>"{{ invitation.title }}"</strong>?</p>
+                <p class="text-muted small mb-0">Tindakan ini tidak dapat dibatalkan. Seluruh data ucapan dan RSVP tamu juga akan terhapus secara permanen.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                <form action="{{ url('/dashboard/invitations/' ~ invitation.id ~ '/delete') }}" method="POST" class="d-inline">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-danger btn-sm">Ya, Hapus Undangan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

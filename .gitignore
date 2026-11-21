@@ -12,5 +12,7 @@
 /public/build/*
 !/public/build/.gitkeep
 .phpunit.result.cache
+tests/sess_*
+/storage/sessions/*
 .DS_Store
 Thumbs.db
