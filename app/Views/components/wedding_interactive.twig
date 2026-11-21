@@ -1,15 +1,50 @@
 <!-- ==========================================================================
-     Invitara - Interactive Wedding Features (Cover, Music, Confetti, Copy)
-     Inspired by dewanakl/undangan
+     Invitara - Interactive Wedding Features (Cover, Music, Confetti, Bottom Dock)
+     Inspired by dewanakl/undangan & indoinvite.com
      ========================================================================== -->
 
-<!-- Floating Music Player Button -->
-<div id="musicControlWidget" style="position: fixed; bottom: 25px; right: 25px; z-index: 9990; display: none;">
-    <button id="btnToggleMusic" class="btn btn-light shadow-lg rounded-circle d-flex align-items-center justify-content-center" 
-            style="width: 52px; height: 52px; border: 2px solid rgba(255,255,255,0.85); background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); cursor: pointer;"
-            title="Putar / Hentikan Musik">
-        <i id="musicIcon" class="bi bi-disc-fill fs-3 text-primary animate-spin" style="transition: transform 0.3s;"></i>
-    </button>
+<!-- Floating Bottom Navigation Dock (Inspired by indoinvite.com) -->
+<div id="weddingBottomDock" class="wedding-bottom-dock" style="display: none;">
+    <!-- Auto Scroll Active Tooltip Bubble -->
+    <div id="autoScrollBubble" class="auto-scroll-bubble" style="display: none;">
+        <span>Auto Scroll Active</span>
+        <div class="bubble-arrow"></div>
+    </div>
+
+    <div class="dock-inner">
+        <a href="#top" class="dock-btn" title="Sampul / Atas">
+            <i class="bi bi-house-door-fill"></i>
+        </a>
+        <a href="#couple" class="dock-btn" title="Kedua Mempelai">
+            <i class="bi bi-people-fill"></i>
+        </a>
+        <a href="#countdown" class="dock-btn" title="Waktu & Tanggal">
+            <i class="bi bi-calendar2-heart-fill"></i>
+        </a>
+        <a href="#venue" class="dock-btn" title="Lokasi Acara">
+            <i class="bi bi-geo-alt-fill"></i>
+        </a>
+        <a href="#gift" class="dock-btn" title="Kado Digital">
+            <i class="bi bi-gift-fill"></i>
+        </a>
+        <a href="#rsvp" class="dock-btn" title="Buku Tamu & RSVP">
+            <i class="bi bi-chat-quote-fill"></i>
+        </a>
+
+        <!-- Divider -->
+        <div class="dock-divider"></div>
+
+        <!-- Auto-scroll Button (indoinvite feature) -->
+        <button id="btnAutoScroll" type="button" class="dock-btn dock-btn-action" title="Gulir Otomatis (Auto Scroll)">
+            <i id="autoScrollIcon" class="bi bi-chevron-double-down"></i>
+        </button>
+
+        <!-- Music Toggle Button -->
+        <button id="btnToggleMusic" type="button" class="dock-btn dock-btn-action" title="Putar / Jeda Musik">
+            <i id="musicIcon" class="bi bi-disc-fill animate-spin"></i>
+        </button>
+    </div>
+
     <audio id="weddingAudio" loop preload="auto">
         <source src="{{ asset('assets/music/wedding-love.mp3') }}" type="audio/mp3">
     </audio>
@@ -65,6 +100,7 @@
 </div>
 
 <style>
+    /* Spinning Disc Animation */
     @keyframes spinDisc {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
@@ -76,6 +112,106 @@
         overflow: hidden !important;
         height: 100vh !important;
     }
+
+    /* Floating Bottom Dock (IndoInvite Style) */
+    .wedding-bottom-dock {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9990;
+        max-width: 95vw;
+        animation: fadeInUpDock 0.5s ease-out;
+    }
+
+    @keyframes fadeInUpDock {
+        from { opacity: 0; transform: translate(-50%, 20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    .dock-inner {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(15, 23, 42, 0.90);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 6px 12px;
+        border-radius: 50px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .dock-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        background: transparent;
+        border: none;
+        text-decoration: none;
+        font-size: 1.15rem;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .dock-btn:hover, .dock-btn:focus {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .dock-btn-action {
+        background: #3b82f6;
+        color: #ffffff;
+    }
+
+    .dock-btn-action:hover, .dock-btn-action.active {
+        background: #2563eb;
+        color: #ffffff;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    }
+
+    .dock-divider {
+        width: 1px;
+        height: 22px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 0 2px;
+    }
+
+    .auto-scroll-bubble {
+        position: absolute;
+        bottom: 56px;
+        right: 48px;
+        background: #1e293b;
+        color: #38bdf8;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        white-space: nowrap;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        animation: bounceBubble 0.8s infinite alternate ease-in-out;
+    }
+
+    .auto-scroll-bubble .bubble-arrow {
+        position: absolute;
+        bottom: -5px;
+        right: 14px;
+        width: 0; 
+        height: 0; 
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #1e293b;
+    }
+
+    @keyframes bounceBubble {
+        from { transform: translateY(0); }
+        to { transform: translateY(-4px); }
+    }
 </style>
 
 <!-- Canvas Confetti Library from CDN -->
@@ -86,9 +222,9 @@
         // 1. Lock body scrolling while cover is visible
         document.body.classList.add('cover-locked');
 
-        // 2. Personalize Guest Name from URL parameter (?to=...)
+        // 2. Personalize Guest Name from URL parameter (?to=... / ?kpd=... as in indoinvite)
         const urlParams = new URLSearchParams(window.location.search);
-        const guestName = urlParams.get('to') || urlParams.get('u') || urlParams.get('nama');
+        const guestName = urlParams.get('to') || urlParams.get('kpd') || urlParams.get('u') || urlParams.get('nama');
         if (guestName) {
             const guestDisplay = document.getElementById('guestNameDisplay');
             if (guestDisplay) {
@@ -100,7 +236,7 @@
         const audio = document.getElementById('weddingAudio');
         const btnToggleMusic = document.getElementById('btnToggleMusic');
         const musicIcon = document.getElementById('musicIcon');
-        const musicWidget = document.getElementById('musicControlWidget');
+        const bottomDock = document.getElementById('weddingBottomDock');
         let isMusicPlaying = false;
 
         function playMusic() {
@@ -167,8 +303,10 @@
             btnOpen.addEventListener('click', function () {
                 // Play music upon user click
                 playMusic();
-                if (musicWidget) {
-                    musicWidget.style.display = 'block';
+
+                // Show the Bottom Navigation Dock
+                if (bottomDock) {
+                    bottomDock.style.display = 'block';
                 }
 
                 // Fire celebration confetti
@@ -185,7 +323,53 @@
             });
         }
 
-        // 6. Global Copy to Clipboard Function with instant feedback
+        // 6. IndoInvite Signature Feature: Auto-Scroll Handler
+        let isAutoScrolling = false;
+        let autoScrollTimer = null;
+        const btnAutoScroll = document.getElementById('btnAutoScroll');
+        const bubble = document.getElementById('autoScrollBubble');
+        const autoScrollIcon = document.getElementById('autoScrollIcon');
+
+        function toggleAutoScroll() {
+            isAutoScrolling = !isAutoScrolling;
+            
+            if (isAutoScrolling) {
+                if (btnAutoScroll) btnAutoScroll.classList.add('active');
+                if (bubble) bubble.style.display = 'block';
+                if (autoScrollIcon) autoScrollIcon.classList.replace('bi-chevron-double-down', 'bi-pause-fill');
+                
+                autoScrollTimer = setInterval(function () {
+                    window.scrollBy({ top: 1.5, behavior: 'smooth' });
+                    // Stop when reaching bottom of page
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+                        toggleAutoScroll();
+                    }
+                }, 30);
+            } else {
+                if (btnAutoScroll) btnAutoScroll.classList.remove('active');
+                if (bubble) bubble.style.display = 'none';
+                if (autoScrollIcon) autoScrollIcon.classList.replace('bi-pause-fill', 'bi-chevron-double-down');
+                if (autoScrollTimer) {
+                    clearInterval(autoScrollTimer);
+                    autoScrollTimer = null;
+                }
+            }
+        }
+
+        if (btnAutoScroll) {
+            btnAutoScroll.addEventListener('click', toggleAutoScroll);
+        }
+
+        // Cancel auto-scroll if user interacts manually
+        window.addEventListener('wheel', function () {
+            if (isAutoScrolling) toggleAutoScroll();
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function () {
+            if (isAutoScrolling) toggleAutoScroll();
+        }, { passive: true });
+
+        // 7. Global Copy to Clipboard Function with instant feedback
         window.copyAccountNumber = function(elementId, btnElement) {
             const el = document.getElementById(elementId);
             if (!el) return;
@@ -204,7 +388,7 @@
             });
         };
 
-        // 7. Fire confetti on RSVP form submit
+        // 8. Fire confetti on RSVP form submit
         const rsvpForm = document.querySelector('form[action*="/rsvp"]');
         if (rsvpForm) {
             rsvpForm.addEventListener('submit', function() {

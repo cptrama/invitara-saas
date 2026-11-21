@@ -66,7 +66,7 @@
 
 {% include "components/wedding_interactive.twig" with {theme: 'floral'} %}
 
-<div class="floral-container">
+<div class="floral-container" id="top">
     <!-- Floral Header -->
     <header class="floral-header">
         <div class="floral-ornament mb-2">🌿 🌸 🌿</div>
@@ -94,7 +94,7 @@
         {% include "components/alerts.twig" %}
 
         <!-- Countdown -->
-        <div class="countdown-card text-center my-4">
+        <div class="countdown-card text-center my-4" id="countdown">
             <p class="text-floral small fw-bold text-uppercase mb-3">Menuju Hari Bahagia</p>
             <div class="d-flex justify-content-center gap-3" id="floralCountdown">
                 <div class="p-2 px-3 bg-white rounded-3 shadow-sm text-center">
@@ -116,6 +116,8 @@
             </div>
         </div>
 
+        {% include "components/wedding_couple.twig" %}
+
         <!-- Story -->
         {% if invitation.description %}
             <section class="my-5 text-center px-md-3">
@@ -127,7 +129,7 @@
         {% endif %}
 
         <!-- Venue -->
-        <section class="my-5">
+        <section id="venue" class="my-5">
             <div class="card border-0 bg-floral-subtle rounded-4 p-4 text-center">
                 <i class="bi bi-geo-alt fs-2 text-floral mb-2"></i>
                 <h4 class="font-serif fw-bold text-floral mb-2">Tempat &amp; Alamat Acara</h4>

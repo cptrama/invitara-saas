@@ -1,0 +1,70 @@
+<!-- ==========================================================================
+     Invitara - Couple Showcase & Holy Quote (Inspired by indoinvite.com)
+     ========================================================================== -->
+<section id="couple" class="my-5 text-center">
+    <!-- Ayat Suci Ar-Rum 21 -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-5" style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05) !important;">
+        <div class="mb-3 text-accent fs-1">
+            <i class="bi bi-flower1"></i>
+        </div>
+        <p class="fs-4 mb-3" style="font-family: 'Amiri', 'Traditional Arabic', serif; direction: rtl; line-height: 2.2;">
+            وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ
+        </p>
+        <p class="small text-muted fst-italic lh-lg mb-2">
+            "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."
+        </p>
+        <div class="fw-bold text-accent small">(QS. Ar-Rum: 21)</div>
+    </div>
+
+    <!-- Salam Pembuka -->
+    <div class="text-center mb-5 px-3">
+        <h4 class="font-serif fw-bold text-dark mb-2">Assalamu'alaikum Warahmatullahi Wabarakatuh</h4>
+        <p class="text-muted small mx-auto" style="max-width: 540px;">
+            Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta'ala, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri hari bahagia pernikahan kami:
+        </p>
+    </div>
+
+    <!-- Kartu Pasangan Mempelai -->
+    <div class="row g-4 justify-content-center align-items-center">
+        <!-- Mempelai Pertama (Pria) -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white h-100">
+                <div class="mb-3">
+                    <span class="avatar avatar-xl rounded-circle shadow-sm bg-accent-subtle text-accent d-inline-flex align-items-center justify-content-center" 
+                          style="width: 90px; height: 90px; font-size: 2rem;">
+                        <i class="bi bi-person-heart"></i>
+                    </span>
+                </div>
+                <h3 class="font-serif fw-bold text-dark mb-1">{{ invitation.partner_one_name }}</h3>
+                <div class="badge bg-light text-muted border rounded-pill px-3 py-1 mb-3">Mempelai</div>
+                <p class="text-secondary small mb-0">
+                    Putra dari Pasangan Tercinta<br>
+                    <strong>Bpk. Keluarga &amp; Ibu Tercinta</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Pemisah Lambang Cinta -->
+        <div class="col-auto text-accent fs-1 d-none d-md-block">
+            <i class="bi bi-heart-fill text-danger opacity-75"></i>
+        </div>
+
+        <!-- Mempelai Kedua (Wanita) -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white h-100">
+                <div class="mb-3">
+                    <span class="avatar avatar-xl rounded-circle shadow-sm bg-accent-subtle text-accent d-inline-flex align-items-center justify-content-center" 
+                          style="width: 90px; height: 90px; font-size: 2rem;">
+                        <i class="bi bi-person-hearts"></i>
+                    </span>
+                </div>
+                <h3 class="font-serif fw-bold text-dark mb-1">{{ invitation.partner_two_name }}</h3>
+                <div class="badge bg-light text-muted border rounded-pill px-3 py-1 mb-3">Mempelai</div>
+                <p class="text-secondary small mb-0">
+                    Putri dari Pasangan Tercinta<br>
+                    <strong>Bpk. Keluarga &amp; Ibu Tercinta</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
