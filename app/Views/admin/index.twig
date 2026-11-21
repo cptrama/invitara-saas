@@ -1,0 +1,148 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<div class="page-header d-print-none mb-4">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+            <div class="page-pretitle text-muted small text-uppercase">Administrasi Sistem</div>
+            <h2 class="page-title fw-bold text-dark">
+                <i class="ti ti-shield-lock text-purple me-2"></i> Panel Admin &amp; Pemantauan Platform
+            </h2>
+        </div>
+    </div>
+</div>
+
+<!-- Platform Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Total Pengguna Terdaftar</div>
+                <div class="h2 fw-bold text-dark mb-0">{{ stats.total_users }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Total Seluruh Undangan</div>
+                <div class="h2 fw-bold text-primary mb-0">{{ stats.total_invitations }}</div>
+                <div class="small text-muted mt-1">{{ stats.published_invitations }} terbit &bull; {{ stats.draft_invitations }} draft</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Total Respons RSVP</div>
+                <div class="h2 fw-bold text-success mb-0">{{ stats.total_rsvps }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small mb-1">Estimasi Tamu Hadir</div>
+                <div class="h2 fw-bold text-indigo mb-0">{{ stats.total_guests }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kelola Template Wedding -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+        <h4 class="card-title fw-bold mb-0">
+            <i class="ti ti-palette me-2 text-primary"></i> Kelola Template Wedding (PRD 3.2 &amp; 6.4)
+        </h4>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">ID</th>
+                        <th>Nama Template</th>
+                        <th>Slug</th>
+                        <th>View Key</th>
+                        <th>Kategori</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tmpl in templates %}
+                        <tr>
+                            <td class="ps-3 text-muted">{{ tmpl.id }}</td>
+                            <td class="fw-semibold">{{ tmpl.name }}</td>
+                            <td><code>{{ tmpl.slug }}</code></td>
+                            <td><span class="badge bg-light text-dark border">{{ tmpl.view_key }}</span></td>
+                            <td>{{ tmpl.category_name ?? 'Wedding' }}</td>
+                            <td>
+                                {% if tmpl.is_active %}
+                                    <span class="badge bg-success">Aktif</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Nonaktif</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-3">
+                                <form action="{{ url('/admin/templates/' ~ tmpl.id ~ '/toggle') }}" method="POST" class="d-inline">
+                                    {{ csrf_field() }}
+                                    {% if tmpl.is_active %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Nonaktifkan Template">
+                                            <i class="ti ti-power me-1"></i> Nonaktifkan
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-sm btn-outline-success" title="Aktifkan Template">
+                                            <i class="ti ti-check me-1"></i> Aktifkan
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Daftar Pengguna Platform -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h4 class="card-title fw-bold mb-0">
+            <i class="ti ti-users me-2 text-info"></i> Daftar Pengguna Platform
+        </h4>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Peran (Role)</th>
+                        <th>Tanggal Terdaftar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td class="ps-3 text-muted">{{ u.id }}</td>
+                            <td class="fw-semibold">{{ u.name }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>
+                                <span class="badge {{ u.role == 'admin' ? 'bg-purple-lt text-purple' : 'bg-blue-lt text-blue' }} text-uppercase">
+                                    {{ u.role }}
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ u.created_at|date("d M Y H:i") }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

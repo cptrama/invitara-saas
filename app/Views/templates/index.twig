@@ -1,123 +1,60 @@
 {% extends "layouts/public.twig" %}
 
 {% block public_content %}
-<div class="container-xl py-4">
-    <!-- Header Galeri -->
-    <div class="row align-items-center mb-5">
-        <div class="col-lg-8">
-            <span class="badge bg-primary-lt text-primary px-3 py-1 rounded-pill fw-semibold mb-2">Katalog Desain</span>
-            <h1 class="display-6 fw-bold text-dark mb-2">Galeri Template Undangan Pernikahan</h1>
-            <p class="text-muted lead mb-0">
-                Pilih tema undangan pernikahan digital yang paling mencerminkan kisah cinta dan momen istimewa Anda.
-            </p>
-        </div>
-        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-            {% if is_authenticated() %}
-                <a href="{{ url('/dashboard/invitations/create') }}" class="btn btn-primary d-inline-flex align-items-center">
-                    <i class="ti ti-plus me-1"></i> Buat Undangan Langsung
-                </a>
-            {% else %}
-                <a href="{{ url('/register') }}" class="btn btn-primary d-inline-flex align-items-center">
-                    <i class="ti ti-user-plus me-1"></i> Daftar Akun Gratis
-                </a>
-            {% endif %}
-        </div>
+<div class="py-5 bg-light border-bottom">
+    <div class="container text-center">
+        <span class="badge bg-primary-lt text-primary px-3 py-2 rounded-pill fw-semibold mb-2">Desain Eksklusif</span>
+        <h1 class="fw-bold display-6 mb-2">Galeri Template Undangan Pernikahan</h1>
+        <p class="text-muted lead fs-4 mx-auto" style="max-width: 650px;">
+            Pilih dari berbagai pilihan desain pernikahan elegan dan modern yang siap digunakan untuk momen istimewa Anda.
+        </p>
     </div>
+</div>
 
-    <!-- Filter Kategori -->
-    {% if categories is defined and categories|length > 0 %}
-        <div class="mb-4 d-flex flex-wrap gap-2">
-            <a href="{{ url('/templates') }}" class="btn btn-sm btn-outline-primary active">Semua Kategori</a>
-            {% for cat in categories %}
-                <a href="{{ url('/templates?category=' ~ cat.slug) }}" class="btn btn-sm btn-outline-secondary">
-                    {{ cat.name }}
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <!-- Grid Kartu Template -->
-    <div class="row g-4">
-        {% for template in templates %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-xs border-0 rounded-3 overflow-hidden card-hover-scale d-flex flex-column">
-                    <!-- Template Visual Header -->
-                    <div class="position-relative text-white p-5 text-center d-flex flex-column justify-content-center align-items-center"
-                         style="min-height: 220px; background: {% if template.view_key == 'floral' %}linear-gradient(135deg, #fbcfe8 0%, #fda4af 100%){% elseif template.view_key == 'modern' %}linear-gradient(135deg, #0f172a 0%, #1e293b 100%){% else %}linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%){% endif %};">
-                        
-                        <span class="avatar avatar-xl {% if template.view_key == 'floral' %}bg-white text-pink{% elseif template.view_key == 'modern' %}bg-dark-lt text-white{% else %}bg-white text-dark{% endif %} rounded-circle mb-3 shadow-sm">
-                            {% if template.view_key == 'floral' %}
-                                <i class="ti ti-flower fs-1"></i>
-                            {% elseif template.view_key == 'modern' %}
-                                <i class="ti ti-diamond fs-1"></i>
-                            {% else %}
-                                <i class="ti ti-heart fs-1"></i>
-                            {% endif %}
-                        </span>
-
-                        <h3 class="fw-bold mb-1 {% if template.view_key == 'minimal' %}text-dark{% else %}text-white{% endif %}">
-                            {{ template.name }}
-                        </h3>
-                        <span class="badge {% if template.view_key == 'minimal' %}bg-dark text-white{% else %}bg-white-lt text-white{% endif %} mt-1">
-                            {{ template.category_name ?? 'Wedding' }}
-                        </span>
-                    </div>
-
-                    <!-- Card Body -->
-                    <div class="card-body d-flex flex-column p-4 flex-grow-1">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge bg-secondary-lt">
-                                <i class="ti ti-layout me-1"></i> {{ template.view_key|capitalize }}
-                            </span>
-                            <span class="badge bg-success-lt">
-                                <i class="ti ti-device-mobile me-1"></i> Mobile Ready
+<div class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for template in templates %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                        <div class="position-relative bg-secondary-subtle d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <i class="ti ti-heart-handshake text-muted display-4"></i>
+                            <span class="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-xs border">
+                                {{ template.category_name ?? 'Wedding' }}
                             </span>
                         </div>
-
-                        <p class="card-text text-muted small flex-grow-1 mb-4">
-                            {{ template.description ?? 'Template undangan pernikahan elegan dengan desain responsif, countdown timer, peta acara, dan form RSVP.' }}
-                        </p>
-
-                        <!-- Pilihan Palet Warna yang Didukung -->
-                        <div class="mb-3">
-                            <div class="text-muted small mb-1 fw-semibold">Pilihan Warna Aksen:</div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="card-title fw-bold text-dark mb-0">{{ template.name }}</h4>
+                                <span class="badge bg-blue-lt text-uppercase font-monospace small">{{ template.view_key }}</span>
+                            </div>
+                            <p class="card-text text-muted small flex-grow-1 mb-4">
+                                {{ template.description ?? 'Template undangan digital elegan dan responsif.' }}
+                            </p>
                             <div class="d-flex gap-2">
-                                <span class="avatar avatar-xs rounded-circle border" style="background-color: #d946ef;" title="Rose"></span>
-                                <span class="avatar avatar-xs rounded-circle border" style="background-color: #10b981;" title="Emerald"></span>
-                                <span class="avatar avatar-xs rounded-circle border" style="background-color: #f59e0b;" title="Gold"></span>
-                                <span class="avatar avatar-xs rounded-circle border" style="background-color: #1e293b;" title="Classic"></span>
+                                <a href="{{ url('/templates/' ~ template.slug) }}" class="btn btn-outline-secondary btn-sm flex-fill">
+                                    <i class="ti ti-eye me-1"></i> Detail
+                                </a>
+                                {% if is_authenticated() %}
+                                    <a href="{{ url('/dashboard/invitations/create?template=' ~ template.id) }}" class="btn btn-primary btn-sm flex-fill">
+                                        <i class="ti ti-check me-1"></i> Pilih Template
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url('/register') }}" class="btn btn-primary btn-sm flex-fill">
+                                        <i class="ti ti-sparkles me-1"></i> Buat Undangan
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
-
-                        <!-- Card Actions -->
-                        <div class="d-flex gap-2 pt-3 border-top mt-auto">
-                            <a href="{{ url('/templates/' ~ template.slug) }}" class="btn btn-outline-secondary btn-sm flex-fill d-inline-flex align-items-center justify-content-center">
-                                <i class="ti ti-eye me-1"></i> Preview
-                            </a>
-                            {% if is_authenticated() %}
-                                <a href="{{ url('/dashboard/invitations/create?template_id=' ~ template.id) }}" class="btn btn-primary btn-sm flex-fill d-inline-flex align-items-center justify-content-center">
-                                    <i class="ti ti-check me-1"></i> Gunakan
-                                </a>
-                            {% else %}
-                                <a href="{{ url('/register') }}" class="btn btn-primary btn-sm flex-fill d-inline-flex align-items-center justify-content-center">
-                                    <i class="ti ti-sparkles me-1"></i> Pilih Desain
-                                </a>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            <div class="col-12 py-5 text-center">
-                <div class="empty">
-                    <div class="empty-icon">
-                        <i class="ti ti-palette fs-1 text-muted"></i>
-                    </div>
-                    <p class="empty-title h3">Belum Ada Template Tersedia</p>
-                    <p class="empty-subtitle text-muted">Katalog template wedding sedang dalam pembaruan.</p>
+            {% else %}
+                <div class="col-12 text-center text-muted py-5">
+                    <i class="ti ti-inbox fs-1 d-block mb-2 text-secondary"></i>
+                    Belum ada template aktif yang tersedia saat ini.
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

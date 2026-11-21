@@ -33,6 +33,9 @@
                         <span class="dropdown-item-text small text-muted">{{ auth_user().name }}</span>
                         <span class="dropdown-item-text small text-muted">{{ auth_user().email }}</span>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('/dashboard/profile') }}">
+                            <i class="ti ti-user-cog me-2"></i> Pengaturan Profil
+                        </a>
                         <form action="{{ url('/logout') }}" method="POST" class="m-0">
                             {{ csrf_field() }}
                             <button type="submit" class="dropdown-item text-danger">
@@ -70,6 +73,24 @@
                             <span class="nav-link-title">Galeri Template</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/dashboard/profile') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-user-cog fs-2"></i>
+                            </span>
+                            <span class="nav-link-title">Pengaturan Profil</span>
+                        </a>
+                    </li>
+                    {% if is_admin() %}
+                    <li class="nav-item">
+                        <a class="nav-link text-purple" href="{{ url('/admin') }}">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block text-purple">
+                                <i class="ti ti-shield-lock fs-2"></i>
+                            </span>
+                            <span class="nav-link-title text-purple fw-semibold">Panel Admin</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item mt-2">
                         <a class="nav-link text-primary fw-semibold" href="{{ url('/dashboard/invitations/create') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block text-primary">
@@ -126,6 +147,14 @@
                             <a class="dropdown-item" href="{{ url('/dashboard/invitations') }}">
                                 <i class="ti ti-mail me-2"></i> Undangan Saya
                             </a>
+                            <a class="dropdown-item" href="{{ url('/dashboard/profile') }}">
+                                <i class="ti ti-user-cog me-2"></i> Pengaturan Profil
+                            </a>
+                            {% if is_admin() %}
+                            <a class="dropdown-item text-purple fw-semibold" href="{{ url('/admin') }}">
+                                <i class="ti ti-shield-lock me-2"></i> Panel Admin
+                            </a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
                             <form action="{{ url('/logout') }}" method="POST" class="m-0">
                                 {{ csrf_field() }}

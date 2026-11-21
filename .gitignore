@@ -7,8 +7,12 @@
 !/storage/logs/.gitkeep
 /public/uploads/*
 !/public/uploads/.gitkeep
+!/public/uploads/.htaccess
+!/public/uploads/index.html
 /public/build/*
 !/public/build/.gitkeep
 .phpunit.result.cache
+tests/sess_*
+/storage/sessions/*
 .DS_Store
 Thumbs.db

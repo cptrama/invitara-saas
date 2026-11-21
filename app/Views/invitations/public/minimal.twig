@@ -1,342 +1,294 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ invitation.title ?? (invitation.partner_one_name ~ ' & ' ~ invitation.partner_two_name) }}</title>
-    <!-- Tabler & Bootstrap Core Icons via Vite -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}?v=1.0.1">
-    <!-- Google Fonts: Playfair Display & Cormorant Garamond -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --minimal-accent: {% if invitation.theme_color == 'rose' %}#be185d{% elseif invitation.theme_color == 'emerald' %}#047857{% elseif invitation.theme_color == 'gold' %}#b45309{% else %}#1e293b{% endif %};
-            --minimal-bg: #fdfbf7;
-            --minimal-card-bg: #ffffff;
-        }
+{% extends "layouts/base.twig" %}
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--minimal-bg);
-            color: #334155;
-            letter-spacing: 0.02em;
-        }
+{% block content %}
+<style>
+    :root {
+        {% if invitation.theme_color == 'emerald' %}
+            --inv-accent: #2d6a4f;
+            --inv-accent-light: #d8f3dc;
+            --inv-text: #1b4332;
+        {% elseif invitation.theme_color == 'gold' %}
+            --inv-accent: #b5838d;
+            --inv-accent-light: #faedcd;
+            --inv-text: #6b4f4f;
+        {% elseif invitation.theme_color == 'classic' %}
+            --inv-accent: #212529;
+            --inv-accent-light: #e9ecef;
+            --inv-text: #212529;
+        {% elseif invitation.theme_color == 'blue' %}
+            --inv-accent: #1d3557;
+            --inv-accent-light: #e0fbfc;
+            --inv-text: #1d3557;
+        {% elseif invitation.theme_color == 'purple' %}
+            --inv-accent: #6a4c93;
+            --inv-accent-light: #f3e8ee;
+            --inv-text: #4a2870;
+        {% else %}
+            --inv-accent: #9d4edd;
+            --inv-accent-light: #fbeaf0;
+            --inv-text: #8338ec;
+        {% endif %}
+    }
+    .minimal-wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        background: #ffffff;
+        min-height: 100vh;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    }
+    .minimal-hero {
+        padding: 5rem 1.5rem 4rem;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .font-serif {
+        font-family: Georgia, 'Times New Roman', serif;
+    }
+    .text-accent {
+        color: var(--inv-accent) !important;
+    }
+    .bg-accent {
+        background-color: var(--inv-accent) !important;
+        color: #fff;
+    }
+    .bg-accent-subtle {
+        background-color: var(--inv-accent-light) !important;
+    }
+    .btn-accent {
+        background-color: var(--inv-accent);
+        color: #fff;
+        border: none;
+    }
+    .btn-accent:hover {
+        background-color: var(--inv-accent);
+        opacity: 0.9;
+        color: #fff;
+    }
+    .countdown-box {
+        display: inline-flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+    .countdown-item {
+        background: var(--inv-accent-light);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        min-width: 65px;
+        text-align: center;
+    }
+</style>
 
-        .serif-font {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-        }
-
-        .wedding-container {
-            max-width: 680px;
-            margin: 0 auto;
-            background-color: var(--minimal-card-bg);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-            border-left: 1px solid rgba(0, 0, 0, 0.04);
-            border-right: 1px solid rgba(0, 0, 0, 0.04);
-            min-height: 100vh;
-        }
-
-        .hero-section {
-            padding: 80px 24px 60px;
-            text-align: center;
-            border-bottom: 1px solid #f1f5f9;
-            background: linear-gradient(180deg, rgba(253, 251, 247, 0.8) 0%, rgba(255, 255, 255, 1) 100%);
-        }
-
-        .names-heading {
-            font-size: 3rem;
-            line-height: 1.15;
-            color: var(--minimal-accent);
-            letter-spacing: 0.04em;
-        }
-
-        .section-divider {
-            width: 40px;
-            height: 2px;
-            background-color: var(--minimal-accent);
-            margin: 20px auto;
-            opacity: 0.6;
-        }
-
-        .countdown-item {
-            background-color: var(--minimal-bg);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            padding: 12px 8px;
-            min-width: 65px;
-            text-align: center;
-        }
-
-        .countdown-num {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--minimal-accent);
-            font-family: 'Cormorant Garamond', serif;
-        }
-
-        .card-wedding {
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background-color: #ffffff;
-            padding: 24px;
-        }
-
-        .rsvp-bubble {
-            background-color: var(--minimal-bg);
-            border-radius: 10px;
-            padding: 14px 18px;
-            border-left: 3px solid var(--minimal-accent);
-        }
-    </style>
-</head>
-<body>
-
-<div class="wedding-container">
-    <!-- Hero / Sampul Undangan -->
-    <header class="hero-section">
-        <div class="text-uppercase small tracking-widest text-muted mb-3" style="letter-spacing: 0.25em;">
-            THE WEDDING CELEBRATION OF
-        </div>
-
-        <h1 class="serif-font names-heading mb-3">
+<div class="minimal-wrap">
+    <!-- Hero / Header -->
+    <header class="minimal-hero">
+        <p class="text-uppercase tracking-widest text-muted small mb-2" style="letter-spacing: 3px;">The Wedding Celebration Of</p>
+        <h1 class="font-serif display-4 fw-normal text-accent my-3">
             {{ invitation.partner_one_name }}
-            <span class="d-block fst-italic my-1" style="font-size: 1.8rem; font-weight: 400;">&amp;</span>
+            <span class="d-block fs-3 my-1 font-serif text-muted">&amp;</span>
             {{ invitation.partner_two_name }}
         </h1>
-
-        <div class="section-divider"></div>
-
-        <p class="serif-font fst-italic fs-4 text-muted mb-4">
-            {{ invitation.event_date ? invitation.event_date|date("l, d F Y") : 'Save The Date' }}
-        </p>
-
-        <!-- Countdown Timer -->
-        <div class="d-flex justify-content-center gap-2 mb-4">
-            <div class="countdown-item">
-                <div class="countdown-num" id="cd-days">00</div>
-                <div class="small text-muted" style="font-size: 0.7rem;">HARI</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-num" id="cd-hours">00</div>
-                <div class="small text-muted" style="font-size: 0.7rem;">JAM</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-num" id="cd-minutes">00</div>
-                <div class="small text-muted" style="font-size: 0.7rem;">MENIT</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-num" id="cd-seconds">00</div>
-                <div class="small text-muted" style="font-size: 0.7rem;">DETIK</div>
-            </div>
-        </div>
-
-        {% if invitation.cover_photo_path %}
-            <div class="mt-4 px-2">
-                <img src="{{ asset(invitation.cover_photo_path) }}" 
-                     alt="Cover Photo" 
-                     class="img-fluid rounded-3 shadow-xs" 
-                     style="max-height: 420px; width: 100%; object-fit: cover;">
-            </div>
-        {% endif %}
-    </header>
-
-    <!-- Pesan Pengantar / Kisah Cinta -->
-    {% if invitation.description %}
-        <section class="py-5 px-4 text-center border-bottom">
-            <div class="badge bg-light text-dark mb-3 px-3 py-1 border">OUR STORY</div>
-            <p class="serif-font fst-italic fs-4 text-secondary col-md-10 mx-auto leading-relaxed">
-                "{{ invitation.description }}"
-            </p>
-        </section>
-    {% endif %}
-
-    <!-- Rincian Waktu & Lokasi Acara -->
-    <section class="py-5 px-4 border-bottom">
-        <div class="text-center mb-4">
-            <span class="text-uppercase small text-muted" style="letter-spacing: 0.2em;">WAKTU &amp; TEMPAT</span>
-            <h2 class="serif-font fs-1 mt-1" style="color: var(--minimal-accent);">Agenda Pernikahan</h2>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="card-wedding shadow-xs text-center mb-4">
-            <div class="avatar avatar-md bg-light text-dark rounded-circle mb-3 mx-auto">
-                <i class="ti ti-calendar fs-2"></i>
-            </div>
-            <h3 class="serif-font fs-2 mb-2">{{ invitation.event_date ? invitation.event_date|date("d F Y") : '-' }}</h3>
-            <div class="text-muted mb-3">
-                <i class="ti ti-clock me-1"></i> Pukul {{ invitation.event_time ? invitation.event_time|slice(0, 5) : '10:00' }} {{ invitation.timezone == 'Asia/Jakarta' ? 'WIB' : (invitation.timezone == 'Asia/Makassar' ? 'WITA' : 'WIT') }}
-            </div>
-
-            <hr class="my-3 opacity-25">
-
-            <div class="fw-bold fs-4 serif-font text-dark mb-1">{{ invitation.venue_name ?? 'Tempat Acara' }}</div>
-            <p class="text-muted small col-md-10 mx-auto mb-3">
-                {{ invitation.venue_address ?? 'Alamat tempat acara akan diinformasikan kemudian.' }}
-            </p>
-
-            {% if invitation.maps_url %}
-                <a href="{{ invitation.maps_url }}" target="_blank" class="btn btn-outline-dark btn-sm px-4">
-                    <i class="ti ti-map-pin me-1"></i> Buka Google Maps
-                </a>
+        <p class="lead text-dark mt-3 mb-0">{{ invitation.title }}</p>
+        <hr class="w-25 mx-auto my-4 text-muted">
+        <div class="fs-5 fw-light text-secondary">
+            <i class="bi bi-calendar-event text-accent me-1"></i>
+            {{ invitation.event_date|date("l, d F Y") }}
+            {% if invitation.event_time %}
+                <span class="d-block mt-1 small">
+                    <i class="bi bi-clock text-accent me-1"></i>
+                    Pukul {{ invitation.event_time }} {{ invitation.timezone }}
+                </span>
             {% endif %}
         </div>
-    </section>
+    </header>
 
-    <!-- Galeri Foto (Jika ada foto yang diunggah) -->
-    {% if photos is defined and photos|length > 0 %}
-        <section class="py-5 px-4 border-bottom">
-            <div class="text-center mb-4">
-                <span class="text-uppercase small text-muted" style="letter-spacing: 0.2em;">MOMEN KAMI</span>
-                <h2 class="serif-font fs-1 mt-1" style="color: var(--minimal-accent);">Galeri Kenangan</h2>
-                <div class="section-divider"></div>
+    <div class="p-4 p-md-5">
+        {% include "components/alerts.twig" %}
+
+        <!-- Countdown Timer -->
+        <div class="text-center my-4 py-3 bg-light rounded-4">
+            <p class="text-muted small text-uppercase fw-semibold mb-3" style="letter-spacing: 1px;">Menghitung Hari Bahagia</p>
+            <div class="countdown-box" id="countdown">
+                <div class="countdown-item">
+                    <span class="fs-3 fw-bold d-block text-accent" id="days">0</span>
+                    <span class="small text-muted">Hari</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="fs-3 fw-bold d-block text-accent" id="hours">0</span>
+                    <span class="small text-muted">Jam</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="fs-3 fw-bold d-block text-accent" id="minutes">0</span>
+                    <span class="small text-muted">Menit</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="fs-3 fw-bold d-block text-accent" id="seconds">0</span>
+                    <span class="small text-muted">Detik</span>
+                </div>
             </div>
+        </div>
 
-            <div class="row g-3">
-                {% for photo in photos %}
-                    <div class="col-6">
-                        <div class="overflow-hidden rounded-3 shadow-xs">
-                            <img src="{{ asset(photo.photo_path) }}" 
-                                 alt="{{ photo.caption ?? 'Wedding Photo' }}" 
-                                 class="img-fluid w-100" 
-                                 style="height: 180px; object-fit: cover;"
-                                 loading="lazy">
+        <!-- Love Story / Description -->
+        {% if invitation.description %}
+            <section class="text-center my-5 py-3">
+                <i class="bi bi-quote fs-1 text-accent d-block mb-1"></i>
+                <h4 class="font-serif fw-bold text-accent mb-3">Kisah Cinta Kami</h4>
+                <p class="text-muted fst-italic px-md-4 lh-lg mb-0">
+                    {{ invitation.description|nl2br }}
+                </p>
+            </section>
+        {% endif %}
+
+        <!-- Venue / Acara -->
+        <section class="my-5 text-center">
+            <div class="card border-0 bg-accent-subtle rounded-4 p-4 text-center">
+                <i class="bi bi-geo-alt-fill fs-2 text-accent mb-2"></i>
+                <h4 class="font-serif fw-bold text-accent mb-2">Lokasi &amp; Waktu Acara</h4>
+                {% if invitation.venue_name %}
+                    <h5 class="fw-bold text-dark mt-2 mb-1">{{ invitation.venue_name }}</h5>
+                {% endif %}
+                {% if invitation.venue_address %}
+                    <p class="text-muted mb-3">{{ invitation.venue_address|nl2br }}</p>
+                {% endif %}
+
+                {% if invitation.maps_url %}
+                    <div class="mt-2">
+                        <a href="{{ invitation.maps_url }}" target="_blank" class="btn btn-accent px-4 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-pin-map-fill me-1"></i> Buka Petunjuk Arah di Google Maps
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Closing Message -->
+        {% if invitation.closing_message %}
+            <section class="my-5 text-center px-3">
+                <p class="text-secondary lh-lg mb-0 font-serif fst-italic">
+                    "{{ invitation.closing_message|nl2br }}"
+                </p>
+                <div class="fw-bold text-accent mt-3">
+                    Kami yang berbahagia,<br>
+                    <span class="fs-5">{{ invitation.partner_one_name }} &amp; {{ invitation.partner_two_name }}</span>
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- Form RSVP -->
+        <section id="rsvp" class="my-5 pt-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="text-center mb-4">
+                    <span class="badge bg-accent-subtle text-accent px-3 py-1 rounded-pill mb-2">Konfirmasi Kehadiran</span>
+                    <h3 class="font-serif fw-bold text-dark mb-1">RSVP Tamu Undangan</h3>
+                    <p class="text-muted small">Mohon konfirmasikan kehadiran Anda pada formulir di bawah ini.</p>
+                </div>
+
+                <form action="{{ url('/i/' ~ invitation.slug ~ '/rsvp') }}" method="POST">
+                    {{ csrf_field() }}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nama Lengkap Anda <span class="text-danger">*</span></label>
+                        <input type="text" name="guest_name" class="form-control" placeholder="Tuliskan nama lengkap Anda" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Konfirmasi Kehadiran <span class="text-danger">*</span></label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="attendance_status" id="attend_yes" value="attending" checked onchange="toggleGuestCount(true)">
+                                <label class="btn btn-outline-success w-100 py-2" for="attend_yes">
+                                    <i class="bi bi-check-circle me-1"></i> Hadir
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="attendance_status" id="attend_no" value="not_attending" onchange="toggleGuestCount(false)">
+                                <label class="btn btn-outline-danger w-100 py-2" for="attend_no">
+                                    <i class="bi bi-x-circle me-1"></i> Tidak Hadir
+                                </label>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="mb-3" id="guestCountBox">
+                        <label class="form-label fw-semibold">Jumlah Orang Hadir</label>
+                        <input type="number" name="guest_count" id="guestCountInput" class="form-control" min="1" max="10" value="1">
+                        <div class="form-text">Termasuk Anda dan pasangan/keluarga yang mendampingi.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Ucapan &amp; Doa Restu (Opsional)</label>
+                        <textarea name="message" class="form-control" rows="3" placeholder="Tuliskan doa atau ucapan selamat bagi kedua mempelai..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-accent w-100 py-2 rounded-pill fw-bold shadow-sm">
+                        <i class="bi bi-send-fill me-1"></i> Kirim Konfirmasi RSVP
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Wishes Stream / Buku Tamu -->
+        <section class="my-5">
+            <h4 class="font-serif fw-bold text-center text-dark mb-4">
+                <i class="bi bi-chat-heart text-accent me-1"></i>
+                Ucapan &amp; Doa Restu ({{ rsvps|length }})
+            </h4>
+
+            <div class="d-flex flex-column gap-3">
+                {% for rsvp in rsvps %}
+                    <div class="card border-0 shadow-sm rounded-3 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-dark">{{ rsvp.guest_name }}</span>
+                            {% if rsvp.attendance_status == 'attending' %}
+                                <span class="badge bg-success small"><i class="bi bi-check me-1"></i>Hadir ({{ rsvp.guest_count }} orang)</span>
+                            {% else %}
+                                <span class="badge bg-secondary small"><i class="bi bi-x me-1"></i>Tidak Hadir</span>
+                            {% endif %}
+                        </div>
+                        {% if rsvp.message %}
+                            <p class="text-secondary small mb-1 lh-base">{{ rsvp.message|nl2br }}</p>
+                        {% endif %}
+                        <div class="text-muted small" style="font-size: 0.75rem;">
+                            {{ rsvp.created_at|date("d M Y, H:i") }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <p class="small mb-0">Belum ada ucapan. Jadilah yang pertama memberikan doa restu!</p>
                     </div>
                 {% endfor %}
             </div>
         </section>
-    {% endif %}
+    </div>
 
-    <!-- Konfirmasi Kehadiran (RSVP Form) -->
-    <section class="py-5 px-4 border-bottom" id="rsvp">
-        <div class="text-center mb-4">
-            <span class="text-uppercase small text-muted" style="letter-spacing: 0.2em;">KONFIRMASI KEHADIRAN</span>
-            <h2 class="serif-font fs-1 mt-1" style="color: var(--minimal-accent);">Buku Tamu &amp; RSVP</h2>
-            <div class="section-divider"></div>
-            <p class="text-muted small">Mohon konfirmasikan kehadiran Anda untuk membantu kami menyambut Anda.</p>
-        </div>
-
-        {% include "components/alerts.twig" %}
-
-        <div class="card-wedding shadow-xs mb-5">
-            <form action="{{ url('/i/' ~ invitation.slug ~ '/rsvp') }}" method="POST">
-                {{ csrf_field() }}
-
-                <div class="mb-3">
-                    <label class="form-label required fw-semibold small" for="guest_name">Nama Lengkap Anda</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="guest_name" 
-                           name="guest_name" 
-                           value="{{ old('guest_name') }}" 
-                           placeholder="Masukkan nama Anda" 
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label required fw-semibold small">Status Kehadiran</label>
-                    <div class="d-flex gap-4">
-                        <label class="form-check">
-                            <input class="form-check-input" type="radio" name="attendance_status" value="attending" checked>
-                            <span class="form-check-label text-success fw-semibold"><i class="ti ti-check me-1"></i> Hadir</span>
-                        </label>
-                        <label class="form-check">
-                            <input class="form-check-input" type="radio" name="attendance_status" value="not_attending">
-                            <span class="form-check-label text-secondary"><i class="ti ti-x me-1"></i> Tidak Hadir</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small" for="guest_count">Jumlah Tamu yang Hadir</label>
-                    <select class="form-select" id="guest_count" name="guest_count">
-                        <option value="1">1 Orang</option>
-                        <option value="2">2 Orang</option>
-                        <option value="3">3 Orang</option>
-                        <option value="4">4 Orang</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-semibold small" for="message">Ucapan &amp; Doa Restu</label>
-                    <textarea class="form-control" 
-                              id="message" 
-                              name="message" 
-                              rows="3" 
-                              placeholder="Tuliskan ucapan dan doa terbaik untuk kedua mempelai...">{{ old('message') }}</textarea>
-                </div>
-
-                <button type="submit" class="btn btn-dark w-100 py-2 fw-semibold" style="background-color: var(--minimal-accent); border-color: var(--minimal-accent);">
-                    <i class="ti ti-send me-1"></i> Kirim Konfirmasi Kehadiran
-                </button>
-            </form>
-        </div>
-
-        <!-- Daftar Doa & Ucapan Tamu -->
-        {% if rsvps is defined and rsvps|length > 0 %}
-            <div class="mb-4">
-                <h4 class="serif-font fs-2 text-center mb-3">Ucapan &amp; Doa Restu ({{ rsvps|length }})</h4>
-                <div class="d-flex flex-column gap-3" style="max-height: 400px; overflow-y: auto;">
-                    {% for rsvp in rsvps %}
-                        <div class="rsvp-bubble">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-dark small">{{ rsvp.guest_name }}</span>
-                                {% if rsvp.attendance_status == 'attending' %}
-                                    <span class="badge bg-success-lt" style="font-size: 0.65rem;">Hadir</span>
-                                {% else %}
-                                    <span class="badge bg-secondary-lt" style="font-size: 0.65rem;">Berhalangan</span>
-                                {% endif %}
-                            </div>
-                            {% if rsvp.message %}
-                                <p class="text-secondary small mb-0">{{ rsvp.message }}</p>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-    </section>
-
-    <!-- Doa Penutup & Footer -->
-    <footer class="py-5 px-4 text-center">
-        {% if invitation.closing_message %}
-            <p class="serif-font fst-italic fs-4 text-muted col-md-10 mx-auto mb-4">
-                "{{ invitation.closing_message }}"
-            </p>
-        {% endif %}
-
-        <div class="section-divider"></div>
-
-        <div class="serif-font fs-2 text-dark mb-2">
-            {{ invitation.partner_one_name }} &amp; {{ invitation.partner_two_name }}
-        </div>
-        <div class="text-muted small mt-4" style="font-size: 0.75rem;">
-            Dibuat dengan kasih menggunakan <a href="{{ url('/') }}" target="_blank" class="text-decoration-none fw-semibold">Invitara</a>
-        </div>
+    <!-- Footer -->
+    <footer class="text-center py-4 border-top text-muted small">
+        Undangan dibuat dengan cinta melalui <a href="{{ url('/') }}" target="_blank" class="text-accent text-decoration-none fw-semibold">Invitara</a>
     </footer>
 </div>
 
 <script>
-    // Live Countdown Timer
-    (function() {
-        const eventDateStr = "{{ invitation.event_date ? invitation.event_date : '' }} {{ invitation.event_time ? invitation.event_time : '00:00:00' }}";
-        if (!eventDateStr.trim()) return;
+    function toggleGuestCount(isAttending) {
+        const box = document.getElementById('guestCountBox');
+        const input = document.getElementById('guestCountInput');
+        if (isAttending) {
+            box.style.display = 'block';
+            input.value = 1;
+        } else {
+            box.style.display = 'none';
+            input.value = 0;
+        }
+    }
 
-        const targetTime = new Date(eventDateStr.replace(/-/g, '/')).getTime();
+    // Countdown Timer
+    (function() {
+        const targetDate = new Date("{{ invitation.event_date }}T{{ invitation.event_time ? invitation.event_time : '09:00:00' }}").getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
-            const distance = targetTime - now;
+            const distance = targetDate - now;
 
             if (distance < 0) {
-                document.getElementById('cd-days').textContent = '00';
-                document.getElementById('cd-hours').textContent = '00';
-                document.getElementById('cd-minutes').textContent = '00';
-                document.getElementById('cd-seconds').textContent = '00';
+                document.getElementById('countdown').innerHTML = "<div class='text-accent fw-bold fs-5 py-2'>Acara Telah Berlangsung</div>";
                 return;
             }
 
@@ -345,16 +297,14 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+            document.getElementById('minutes').innerText = minutes;
+            document.getElementById('seconds').innerText = seconds;
         }
 
         updateCountdown();
         setInterval(updateCountdown, 1000);
     })();
 </script>
-
-</body>
-</html>
+{% endblock %}

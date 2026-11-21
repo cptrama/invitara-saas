@@ -1,0 +1,119 @@
+{% extends "layouts/dashboard.twig" %}
+
+{% block dashboard_content %}
+<!-- Page Header -->
+<div class="page-header d-print-none mb-4">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+            <div class="page-pretitle text-muted small text-uppercase">Pengaturan Akun</div>
+            <h2 class="page-title fw-bold text-dark">Profil &amp; Keamanan</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards">
+    <!-- Kolom Kiri: Informasi Profil -->
+    <div class="col-lg-6">
+        <form action="{{ url('/dashboard/profile') }}" method="POST" class="card shadow-sm border-0">
+            {{ csrf_field() }}
+            <div class="card-header bg-transparent border-bottom py-3">
+                <h3 class="card-title fw-bold">
+                    <i class="ti ti-user me-2 text-primary"></i> Informasi Akun
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label required">Nama Lengkap</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="ti ti-user"></i>
+                        </span>
+                        <input type="text" name="name" class="form-control" value="{{ user.name }}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Alamat Email</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="ti ti-mail"></i>
+                        </span>
+                        <input type="email" class="form-control bg-light" value="{{ user.email }}" disabled readonly>
+                    </div>
+                    <small class="form-hint text-muted">Alamat email digunakan untuk login dan tidak dapat diubah.</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <label class="form-label">Peran (Role)</label>
+                        <div>
+                            <span class="badge {{ user.role == 'admin' ? 'bg-purple-lt text-purple' : 'bg-blue-lt text-blue' }} text-uppercase px-2 py-1">
+                                <i class="ti ti-shield me-1"></i> {{ user.role }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label class="form-label">Terdaftar Sejak</label>
+                        <div class="text-muted pt-1">
+                            <i class="ti ti-calendar me-1"></i> {{ user.created_at|date("d M Y") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy me-1"></i> Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Kolom Kanan: Ubah Kata Sandi -->
+    <div class="col-lg-6">
+        <form action="{{ url('/dashboard/profile/password') }}" method="POST" class="card shadow-sm border-0">
+            {{ csrf_field() }}
+            <div class="card-header bg-transparent border-bottom py-3">
+                <h3 class="card-title fw-bold">
+                    <i class="ti ti-key me-2 text-warning"></i> Ubah Kata Sandi
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label required">Kata Sandi Saat Ini</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="ti ti-lock"></i>
+                        </span>
+                        <input type="password" name="current_password" class="form-control" placeholder="Masukkan kata sandi lama" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label required">Kata Sandi Baru</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="ti ti-lock-plus"></i>
+                        </span>
+                        <input type="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label required">Konfirmasi Kata Sandi Baru</label>
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="ti ti-shield-check"></i>
+                        </span>
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi kata sandi baru" required>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top text-end">
+                <button type="submit" class="btn btn-warning text-dark">
+                    <i class="ti ti-check me-1"></i> Perbarui Kata Sandi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

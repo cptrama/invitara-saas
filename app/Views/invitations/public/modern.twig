@@ -1,337 +1,284 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>The Wedding of {{ invitation.partner_one_name }} &amp; {{ invitation.partner_two_name }}</title>
-    <!-- Tabler & Bootstrap Core Icons via Vite -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}?v=1.0.1">
-    <!-- Google Fonts: Cinzel & Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --modern-accent: {% if invitation.theme_color == 'rose' %}#fb7185{% elseif invitation.theme_color == 'emerald' %}#34d399{% elseif invitation.theme_color == 'classic' %}#94a3b8{% else %}#fbbf24{% endif %};
-            --modern-bg: #090d16;
-            --modern-surface: #111827;
-            --modern-border: rgba(255, 255, 255, 0.1);
-        }
+{% extends "layouts/base.twig" %}
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--modern-bg);
-            color: #cbd5e1;
-            letter-spacing: 0.02em;
-        }
+{% block content %}
+<style>
+    :root {
+        --modern-dark: #0f172a;
+        --modern-card: #1e293b;
+        --modern-accent: #38bdf8;
+        --modern-subtle: #334155;
+        --modern-text: #f8fafc;
+    }
+    body {
+        background-color: #0b1120;
+        color: #e2e8f0;
+    }
+    .modern-wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        background: #0f172a;
+        min-height: 100vh;
+        border-left: 1px solid #1e293b;
+        border-right: 1px solid #1e293b;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .modern-hero {
+        padding: 5rem 1.5rem 4rem;
+        text-align: center;
+        background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+        border-bottom: 1px solid #334155;
+    }
+    .text-modern {
+        color: var(--modern-accent) !important;
+    }
+    .btn-modern {
+        background: var(--modern-accent);
+        color: #0f172a;
+        border: none;
+        font-weight: 600;
+    }
+    .btn-modern:hover {
+        background: #7dd3fc;
+        color: #0f172a;
+    }
+    .modern-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+    }
+    .modern-timer-box {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        min-width: 65px;
+        text-align: center;
+    }
+</style>
 
-        .cinzel-font {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.12em;
-        }
-
-        .modern-container {
-            max-width: 680px;
-            margin: 0 auto;
-            background-color: var(--modern-surface);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            border-left: 1px solid var(--modern-border);
-            border-right: 1px solid var(--modern-border);
-            min-height: 100vh;
-        }
-
-        .modern-hero {
-            padding: 80px 24px 60px;
-            text-align: center;
-            background: linear-gradient(180deg, rgba(17, 24, 39, 0.6) 0%, rgba(9, 13, 22, 1) 100%);
-            border-bottom: 1px solid var(--modern-border);
-        }
-
-        .accent-gradient-text {
-            background: linear-gradient(135deg, var(--modern-accent) 0%, #ffffff 80%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .modern-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid var(--modern-border);
-            border-radius: 16px;
-            padding: 28px 24px;
-            backdrop-filter: blur(10px);
-        }
-
-        .countdown-box {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--modern-border);
-            border-radius: 12px;
-            padding: 12px 6px;
-            min-width: 68px;
-            text-align: center;
-        }
-
-        .countdown-digits {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--modern-accent);
-            font-family: 'Cinzel', serif;
-        }
-    </style>
-</head>
-<body>
-
-<div class="modern-container">
-    <!-- Hero / Sampul Modern -->
+<div class="modern-wrap">
+    <!-- Hero -->
     <header class="modern-hero">
-        <div class="badge bg-dark text-white border border-secondary mb-3 px-3 py-2 rounded-pill font-monospace small" style="letter-spacing: 0.2em;">
-            THE WEDDING OF
-        </div>
-
-        <h1 class="cinzel-font display-4 fw-bold mb-2 accent-gradient-text">
+        <span class="badge bg-dark border border-secondary text-modern px-3 py-1 rounded-pill mb-3">
+            WEDDING INVITATION
+        </span>
+        <h1 class="display-4 fw-bold text-white mb-2" style="letter-spacing: -1px;">
             {{ invitation.partner_one_name }}
-        </h1>
-        <div class="cinzel-font fs-3 text-muted my-1">&amp;</div>
-        <h1 class="cinzel-font display-4 fw-bold mb-4 accent-gradient-text">
+            <span class="text-modern d-block fs-3 my-1">&amp;</span>
             {{ invitation.partner_two_name }}
         </h1>
+        <p class="text-light opacity-75 mt-2 mb-0">{{ invitation.title }}</p>
 
-        <div class="d-flex align-items-center justify-content-center gap-2 mb-4 text-white font-monospace small">
-            <span style="color: var(--modern-accent);"><i class="ti ti-calendar me-1"></i></span>
-            {{ invitation.event_date ? invitation.event_date|date("l, d F Y") : 'Save The Date' }}
-        </div>
-
-        <!-- Modern Countdown -->
-        <div class="d-flex justify-content-center gap-2 mb-4">
-            <div class="countdown-box">
-                <div class="countdown-digits" id="cd-days">00</div>
-                <div class="text-secondary" style="font-size: 0.65rem;">HARI</div>
+        <div class="mt-4">
+            <div class="fs-5 fw-semibold text-white">
+                <i class="bi bi-calendar3 text-modern me-1"></i>
+                {{ invitation.event_date|date("l, d F Y") }}
             </div>
-            <div class="countdown-box">
-                <div class="countdown-digits" id="cd-hours">00</div>
-                <div class="text-secondary" style="font-size: 0.65rem;">JAM</div>
-            </div>
-            <div class="countdown-box">
-                <div class="countdown-digits" id="cd-minutes">00</div>
-                <div class="text-secondary" style="font-size: 0.65rem;">MENIT</div>
-            </div>
-            <div class="countdown-box">
-                <div class="countdown-digits" id="cd-seconds">00</div>
-                <div class="text-secondary" style="font-size: 0.65rem;">DETIK</div>
-            </div>
-        </div>
-
-        {% if invitation.cover_photo_path %}
-            <div class="px-2 mt-4">
-                <img src="{{ asset(invitation.cover_photo_path) }}" 
-                     alt="Cover Wedding" 
-                     class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-25" 
-                     style="max-height: 420px; width: 100%; object-fit: cover;">
-            </div>
-        {% endif %}
-    </header>
-
-    <!-- Kisah / Cerita Singkat -->
-    {% if invitation.description %}
-        <section class="py-5 px-4 text-center border-bottom border-secondary border-opacity-25">
-            <span class="badge bg-secondary-lt mb-3 font-monospace">MEMOIR</span>
-            <p class="fst-italic text-light col-md-10 mx-auto leading-relaxed mb-0" style="font-size: 1.05rem;">
-                "{{ invitation.description }}"
-            </p>
-        </section>
-    {% endif %}
-
-    <!-- Waktu & Tempat Acara -->
-    <section class="py-5 px-4 border-bottom border-secondary border-opacity-25">
-        <div class="text-center mb-4">
-            <span class="badge bg-secondary-lt font-monospace mb-2">SCHEDULE &amp; VENUE</span>
-            <h2 class="cinzel-font fs-1 text-white">Waktu &amp; Lokasi</h2>
-            <div style="height: 2px; width: 50px; background-color: var(--modern-accent); margin: 12px auto;"></div>
-        </div>
-
-        <div class="modern-card text-center mb-4">
-            <div class="avatar avatar-lg bg-dark text-white rounded-circle mx-auto mb-3 border border-secondary">
-                <i class="ti ti-map-pin fs-1" style="color: var(--modern-accent);"></i>
-            </div>
-            <h3 class="cinzel-font fs-2 text-white mb-2">{{ invitation.venue_name ?? 'Gedung Acara' }}</h3>
-            <p class="text-secondary small col-md-10 mx-auto mb-3">
-                {{ invitation.venue_address ?? 'Alamat lengkap akan segera diumumkan.' }}
-            </p>
-
-            <div class="d-inline-flex align-items-center badge bg-dark text-light p-2 px-3 mb-4 border border-secondary">
-                <i class="ti ti-clock me-1" style="color: var(--modern-accent);"></i>
-                {{ invitation.event_date ? invitation.event_date|date("d F Y") : '' }} • Pukul {{ invitation.event_time ? invitation.event_time|slice(0, 5) : '10:00' }} {{ invitation.timezone == 'Asia/Jakarta' ? 'WIB' : 'WITA' }}
-            </div>
-
-            {% if invitation.maps_url %}
-                <div>
-                    <a href="{{ invitation.maps_url }}" target="_blank" class="btn btn-outline-light btn-sm px-4 rounded-pill">
-                        <i class="ti ti-map-2 me-1"></i> Buka Google Maps
-                    </a>
+            {% if invitation.event_time %}
+                <div class="small text-muted mt-1">
+                    <i class="bi bi-clock text-modern me-1"></i>
+                    {{ invitation.event_time }} {{ invitation.timezone }}
                 </div>
             {% endif %}
         </div>
-    </section>
+    </header>
 
-    <!-- Galeri Foto -->
-    {% if photos is defined and photos|length > 0 %}
-        <section class="py-5 px-4 border-bottom border-secondary border-opacity-25">
-            <div class="text-center mb-4">
-                <span class="badge bg-secondary-lt font-monospace mb-2">GALLERY</span>
-                <h2 class="cinzel-font fs-1 text-white">Momen Berharga</h2>
-                <div style="height: 2px; width: 50px; background-color: var(--modern-accent); margin: 12px auto;"></div>
+    <div class="p-4 p-md-5">
+        {% include "components/alerts.twig" %}
+
+        <!-- Countdown -->
+        <div class="modern-card p-4 text-center my-4">
+            <div class="text-muted small text-uppercase fw-bold mb-3" style="letter-spacing: 2px;">COUNTDOWN</div>
+            <div class="d-flex justify-content-center gap-2 gap-md-3" id="modernCountdown">
+                <div class="modern-timer-box">
+                    <span class="fs-3 fw-bold text-modern d-block" id="mDays">0</span>
+                    <span class="small text-muted">Hari</span>
+                </div>
+                <div class="modern-timer-box">
+                    <span class="fs-3 fw-bold text-modern d-block" id="mHours">0</span>
+                    <span class="small text-muted">Jam</span>
+                </div>
+                <div class="modern-timer-box">
+                    <span class="fs-3 fw-bold text-modern d-block" id="mMinutes">0</span>
+                    <span class="small text-muted">Menit</span>
+                </div>
+                <div class="modern-timer-box">
+                    <span class="fs-3 fw-bold text-modern d-block" id="mSeconds">0</span>
+                    <span class="small text-muted">Detik</span>
+                </div>
             </div>
+        </div>
 
-            <div class="row g-3">
-                {% for photo in photos %}
-                    <div class="col-6">
-                        <div class="rounded-3 overflow-hidden shadow-sm border border-secondary border-opacity-25">
-                            <img src="{{ asset(photo.photo_path) }}" 
-                                 alt="{{ photo.caption ?? 'Wedding Photo' }}" 
-                                 class="img-fluid w-100" 
-                                 style="height: 190px; object-fit: cover;" 
-                                 loading="lazy">
+        <!-- Story -->
+        {% if invitation.description %}
+            <section class="my-5 text-center px-md-3">
+                <h4 class="fw-bold text-white mb-3">Our Story</h4>
+                <p class="text-light opacity-75 lh-lg mb-0">
+                    {{ invitation.description|nl2br }}
+                </p>
+            </section>
+        {% endif %}
+
+        <!-- Location -->
+        <section class="my-5">
+            <div class="modern-card p-4 text-center">
+                <i class="bi bi-geo-alt-fill fs-2 text-modern mb-2"></i>
+                <h4 class="fw-bold text-white mb-2">Event Location</h4>
+                {% if invitation.venue_name %}
+                    <h5 class="fw-bold text-modern mt-2 mb-1">{{ invitation.venue_name }}</h5>
+                {% endif %}
+                {% if invitation.venue_address %}
+                    <p class="text-light opacity-75 mb-3">{{ invitation.venue_address|nl2br }}</p>
+                {% endif %}
+
+                {% if invitation.maps_url %}
+                    <div>
+                        <a href="{{ invitation.maps_url }}" target="_blank" class="btn btn-modern px-4 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-cursor-fill me-1"></i> Google Maps
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Closing Note -->
+        {% if invitation.closing_message %}
+            <section class="my-5 text-center px-3">
+                <p class="text-light opacity-75 lh-lg mb-0 fst-italic">
+                    "{{ invitation.closing_message|nl2br }}"
+                </p>
+                <div class="fw-bold text-modern mt-3">
+                    Warm Regards,<br>
+                    <span class="fs-5 text-white">{{ invitation.partner_one_name }} &amp; {{ invitation.partner_two_name }}</span>
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- RSVP -->
+        <section id="rsvp" class="my-5 pt-3">
+            <div class="modern-card p-4">
+                <div class="text-center mb-4">
+                    <span class="badge bg-dark border border-secondary text-modern px-3 py-1 rounded-pill mb-2">RSVP CONFIRMATION</span>
+                    <h3 class="fw-bold text-white mb-1">Konfirmasi Kehadiran</h3>
+                    <p class="text-muted small">Beri tahu kami apakah Anda dapat menghadiri momen spesial ini.</p>
+                </div>
+
+                <form action="{{ url('/i/' ~ invitation.slug ~ '/rsvp') }}" method="POST">
+                    {{ csrf_field() }}
+
+                    <div class="mb-3">
+                        <label class="form-label text-white fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" name="guest_name" class="form-control bg-dark text-white border-secondary" placeholder="Tuliskan nama Anda" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white fw-semibold">Status Kehadiran <span class="text-danger">*</span></label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="attendance_status" id="modern_attend_yes" value="attending" checked onchange="toggleGuestModern(true)">
+                                <label class="btn btn-outline-info w-100 py-2" for="modern_attend_yes">
+                                    <i class="bi bi-check-lg me-1"></i> Hadir
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="attendance_status" id="modern_attend_no" value="not_attending" onchange="toggleGuestModern(false)">
+                                <label class="btn btn-outline-secondary w-100 py-2" for="modern_attend_no">
+                                    <i class="bi bi-x-lg me-1"></i> Tidak Hadir
+                                </label>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="mb-3" id="modernGuestCountBox">
+                        <label class="form-label text-white fw-semibold">Jumlah Tamu Hadir</label>
+                        <input type="number" name="guest_count" id="modernGuestCountInput" class="form-control bg-dark text-white border-secondary" min="1" max="10" value="1">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white fw-semibold">Ucapan &amp; Pesan (Opsional)</label>
+                        <textarea name="message" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Tuliskan ucapan selamat Anda..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-modern w-100 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-send me-1"></i> Submit RSVP
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Wishes -->
+        <section class="my-5">
+            <h4 class="fw-bold text-center text-white mb-4">
+                <i class="bi bi-chat-dots text-modern me-1"></i>
+                Wishes &amp; Prayers ({{ rsvps|length }})
+            </h4>
+
+            <div class="d-flex flex-column gap-3">
+                {% for rsvp in rsvps %}
+                    <div class="modern-card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-white">{{ rsvp.guest_name }}</span>
+                            {% if rsvp.attendance_status == 'attending' %}
+                                <span class="badge bg-info text-dark small">Hadir ({{ rsvp.guest_count }})</span>
+                            {% else %}
+                                <span class="badge bg-secondary small">Tidak Hadir</span>
+                            {% endif %}
+                        </div>
+                        {% if rsvp.message %}
+                            <p class="text-light opacity-75 small mb-1 lh-base">{{ rsvp.message|nl2br }}</p>
+                        {% endif %}
+                        <div class="text-muted small" style="font-size: 0.75rem;">
+                            {{ rsvp.created_at|date("d M Y, H:i") }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <p class="small mb-0">Belum ada ucapan. Jadilah yang pertama mengirimkan ucapan!</p>
                     </div>
                 {% endfor %}
             </div>
         </section>
-    {% endif %}
+    </div>
 
-    <!-- Konfirmasi Kehadiran Tamu (RSVP) -->
-    <section class="py-5 px-4 border-bottom border-secondary border-opacity-25" id="rsvp">
-        <div class="text-center mb-4">
-            <span class="badge bg-secondary-lt font-monospace mb-2">RESERVATION</span>
-            <h2 class="cinzel-font fs-1 text-white">Konfirmasi RSVP</h2>
-            <div style="height: 2px; width: 50px; background-color: var(--modern-accent); margin: 12px auto;"></div>
-            <p class="text-secondary small">Pastikan kehadiran Anda tercatat pada momen bahagia kami.</p>
-        </div>
-
-        {% include "components/alerts.twig" %}
-
-        <div class="modern-card mb-5">
-            <form action="{{ url('/i/' ~ invitation.slug ~ '/rsvp') }}" method="POST">
-                {{ csrf_field() }}
-
-                <div class="mb-3">
-                    <label class="form-label required fw-semibold small text-light" for="guest_name">Nama Lengkap</label>
-                    <input type="text" class="form-control bg-dark text-white border-secondary" id="guest_name" name="guest_name" value="{{ old('guest_name') }}" placeholder="Masukkan nama Anda" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label required fw-semibold small text-light">Status Kehadiran</label>
-                    <div class="d-flex gap-3">
-                        <label class="form-check">
-                            <input class="form-check-input" type="radio" name="attendance_status" value="attending" checked>
-                            <span class="form-check-label text-success fw-semibold"><i class="ti ti-check me-1"></i> Hadir</span>
-                        </label>
-                        <label class="form-check">
-                            <input class="form-check-input" type="radio" name="attendance_status" value="not_attending">
-                            <span class="form-check-label text-secondary"><i class="ti ti-x me-1"></i> Tidak Hadir</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold small text-light" for="guest_count">Jumlah Kehadiran</label>
-                    <select class="form-select bg-dark text-white border-secondary" id="guest_count" name="guest_count">
-                        <option value="1">1 Orang</option>
-                        <option value="2">2 Orang</option>
-                        <option value="3">3 Orang</option>
-                        <option value="4">4 Orang</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-semibold small text-light" for="message">Ucapan &amp; Harapan</label>
-                    <textarea class="form-control bg-dark text-white border-secondary" id="message" name="message" rows="3" placeholder="Tuliskan ucapan dan doa Anda...">{{ old('message') }}</textarea>
-                </div>
-
-                <button type="submit" class="btn w-100 py-2 fw-semibold text-dark shadow-sm" style="background-color: var(--modern-accent); border: none;">
-                    <i class="ti ti-send me-1"></i> Kirim Konfirmasi RSVP
-                </button>
-            </form>
-        </div>
-
-        <!-- Daftar Doa & Ucapan -->
-        {% if rsvps is defined and rsvps|length > 0 %}
-            <div class="mb-3">
-                <h4 class="cinzel-font fs-3 text-center text-white mb-3">Ucapan &amp; Doa ({{ rsvps|length }})</h4>
-                <div class="d-flex flex-column gap-3" style="max-height: 400px; overflow-y: auto;">
-                    {% for rsvp in rsvps %}
-                        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-light small">{{ rsvp.guest_name }}</span>
-                                {% if rsvp.attendance_status == 'attending' %}
-                                    <span class="badge bg-success-lt" style="font-size: 0.65rem;">Hadir</span>
-                                {% else %}
-                                    <span class="badge bg-secondary-lt" style="font-size: 0.65rem;">Berhalangan</span>
-                                {% endif %}
-                            </div>
-                            {% if rsvp.message %}
-                                <div class="text-secondary small">{{ rsvp.message }}</div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-    </section>
-
-    <!-- Doa Penutup & Footer -->
-    <footer class="py-5 px-4 text-center">
-        {% if invitation.closing_message %}
-            <p class="fst-italic text-secondary col-md-10 mx-auto mb-4" style="font-size: 1rem;">
-                "{{ invitation.closing_message }}"
-            </p>
-        {% endif %}
-
-        <div style="height: 1px; width: 60px; background-color: var(--modern-accent); margin: 16px auto; opacity: 0.5;"></div>
-
-        <div class="cinzel-font fs-2 text-white mb-2">
-            {{ invitation.partner_one_name }} &amp; {{ invitation.partner_two_name }}
-        </div>
-        <div class="text-secondary small mt-4" style="font-size: 0.75rem;">
-            Dibuat menggunakan <a href="{{ url('/') }}" target="_blank" class="text-decoration-none text-light fw-semibold">Invitara</a>
-        </div>
+    <!-- Footer -->
+    <footer class="text-center py-4 border-top border-secondary text-muted small">
+        Powered by <a href="{{ url('/') }}" target="_blank" class="text-modern text-decoration-none fw-semibold">Invitara</a>
     </footer>
 </div>
 
 <script>
-    (function() {
-        const eventDateStr = "{{ invitation.event_date ? invitation.event_date : '' }} {{ invitation.event_time ? invitation.event_time : '00:00:00' }}";
-        if (!eventDateStr.trim()) return;
+    function toggleGuestModern(isAttending) {
+        const box = document.getElementById('modernGuestCountBox');
+        const input = document.getElementById('modernGuestCountInput');
+        if (isAttending) {
+            box.style.display = 'block';
+            input.value = 1;
+        } else {
+            box.style.display = 'none';
+            input.value = 0;
+        }
+    }
 
-        const targetTime = new Date(eventDateStr.replace(/-/g, '/')).getTime();
+    (function() {
+        const targetDate = new Date("{{ invitation.event_date }}T{{ invitation.event_time ? invitation.event_time : '09:00:00' }}").getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
-            const distance = targetTime - now;
+            const distance = targetDate - now;
 
             if (distance < 0) {
-                document.getElementById('cd-days').textContent = '00';
-                document.getElementById('cd-hours').textContent = '00';
-                document.getElementById('cd-minutes').textContent = '00';
-                document.getElementById('cd-seconds').textContent = '00';
+                document.getElementById('modernCountdown').innerHTML = "<div class='text-modern fw-bold fs-5 py-2'>Event Concluded</div>";
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+            document.getElementById('mDays').innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById('mHours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('mMinutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('mSeconds').innerText = Math.floor((distance % (1000 * 60)) / 1000);
         }
 
         updateCountdown();
         setInterval(updateCountdown, 1000);
     })();
 </script>
-
-</body>
-</html>
+{% endblock %}
