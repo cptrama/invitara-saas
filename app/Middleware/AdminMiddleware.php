@@ -13,7 +13,7 @@ class AdminMiddleware
         $user = AuthService::user();
         if (!$user || ($user['role'] ?? '') !== 'admin') {
             Flash::set('error', 'Akses ditolak. Halaman ini hanya dapat diakses oleh administrator.');
-            Flight::halt(403, '403 Forbidden - Anda tidak memiliki izin untuk mengakses halaman ini.');
+            Flight::redirect('/dashboard');
             exit;
         }
     }

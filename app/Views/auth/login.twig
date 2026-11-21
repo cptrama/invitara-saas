@@ -4,7 +4,7 @@
 <h2 class="h2 text-center mb-4 fw-bold">Masuk ke Akun Anda</h2>
 <p class="text-center text-muted small mb-4">Silakan masuk untuk mengelola undangan dan RSVP Anda</p>
 
-<form action="{{ url('/login') }}" method="POST" autocomplete="on">
+<form action="/login" method="POST" autocomplete="on">
     {{ csrf_field() }}
 
     <div class="mb-3">

@@ -66,9 +66,14 @@ class AuthController
         Flash::set('success', 'Selamat datang kembali, ' . htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') . '!');
 
         // Role-based destination redirect: Admin directed to /admin, User to /dashboard
-        $defaultDestination = ($user['role'] === 'admin') ? '/admin' : '/dashboard';
-        $redirectUrl = $_SESSION['_redirect_after_login'] ?? $defaultDestination;
+        $redirectUrl = $_SESSION['_redirect_after_login'] ?? null;
         unset($_SESSION['_redirect_after_login']);
+
+        if ($user['role'] !== 'admin' && ($redirectUrl === null || str_starts_with($redirectUrl, '/admin'))) {
+            $redirectUrl = '/dashboard';
+        } elseif ($user['role'] === 'admin' && $redirectUrl === null) {
+            $redirectUrl = '/admin';
+        }
 
         Flight::redirect($redirectUrl);
     }

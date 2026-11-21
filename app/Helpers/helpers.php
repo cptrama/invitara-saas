@@ -40,8 +40,16 @@ if (!function_exists('url')) {
      */
     function url(string $path = ''): string
     {
-        $baseUrl = rtrim(env('APP_URL', 'http://localhost:8000'), '/');
         $path = ltrim($path, '/');
+
+        // Dynamically detect host and scheme from request to avoid session cookie mismatch (e.g. 127.0.0.1 vs localhost)
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $baseUrl = $scheme . '://' . $_SERVER['HTTP_HOST'];
+        } else {
+            $baseUrl = rtrim(env('APP_URL', 'http://localhost:8000'), '/');
+        }
+
         return $path === '' ? $baseUrl : $baseUrl . '/' . $path;
     }
 }

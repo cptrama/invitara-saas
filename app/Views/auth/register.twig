@@ -4,7 +4,7 @@
 <h2 class="h2 text-center mb-4 fw-bold">Daftar Akun Baru</h2>
 <p class="text-center text-muted small mb-4">Mulai rancang undangan pernikahan impian Anda dalam hitungan menit</p>
 
-<form action="{{ url('/register') }}" method="POST" autocomplete="on">
+<form action="/register" method="POST" autocomplete="on">
     {{ csrf_field() }}
 
     <div class="mb-3">
