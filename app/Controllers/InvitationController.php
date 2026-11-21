@@ -20,15 +20,15 @@ class InvitationController
     private InvitationService $invitationService;
 
     public function __construct(
-        ?InvitationRepository $invitationRepo = null,
-        ?TemplateRepository $templateRepo = null,
-        ?RSVPRepository $rsvpRepo = null,
-        ?InvitationService $invitationService = null
+        $invitationRepo = null,
+        $templateRepo = null,
+        $rsvpRepo = null,
+        $invitationService = null
     ) {
-        $this->invitationRepo = $invitationRepo ?? new InvitationRepository();
-        $this->templateRepo = $templateRepo ?? new TemplateRepository();
-        $this->rsvpRepo = $rsvpRepo ?? new RSVPRepository();
-        $this->invitationService = $invitationService ?? new InvitationService($this->invitationRepo);
+        $this->invitationRepo = ($invitationRepo instanceof InvitationRepository) ? $invitationRepo : new InvitationRepository();
+        $this->templateRepo = ($templateRepo instanceof TemplateRepository) ? $templateRepo : new TemplateRepository();
+        $this->rsvpRepo = ($rsvpRepo instanceof RSVPRepository) ? $rsvpRepo : new RSVPRepository();
+        $this->invitationService = ($invitationService instanceof InvitationService) ? $invitationService : new InvitationService($this->invitationRepo);
     }
 
     /**
@@ -38,6 +38,10 @@ class InvitationController
     public function index(): void
     {
         $userId = AuthService::id();
+        if (!$userId) {
+            Flight::redirect('/login');
+            return;
+        }
         $invitations = $this->invitationRepo->getByUserId($userId);
 
         echo View::render('invitations/index.twig', [
@@ -73,6 +77,10 @@ class InvitationController
     public function store(): void
     {
         $userId = AuthService::id();
+        if (!$userId) {
+            Flight::redirect('/login');
+            return;
+        }
         $data = Flight::request()->data->getData();
 
         $rules = [
