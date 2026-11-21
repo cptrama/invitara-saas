@@ -5,6 +5,10 @@
 @import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.min.css";
 
+/* Modular Section Styles */
+@import "./dashboard.css";
+@import "./landing.css";
+
 /* Custom Invitara Brand Styles */
 :root {
   --invitara-brand: #d946ef;
@@ -59,3 +63,4 @@
   transform: translateY(-4px);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
 }
+
