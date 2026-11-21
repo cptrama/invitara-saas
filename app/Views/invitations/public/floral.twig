@@ -64,6 +64,8 @@
     }
 </style>
 
+{% include "components/wedding_interactive.twig" with {theme: 'floral'} %}
+
 <div class="floral-container">
     <!-- Floral Header -->
     <header class="floral-header">
@@ -158,6 +160,8 @@
                 </div>
             </section>
         {% endif %}
+
+        {% include "components/wedding_gift.twig" %}
 
         <!-- RSVP Form -->
         <section id="rsvp" class="my-5 pt-3">

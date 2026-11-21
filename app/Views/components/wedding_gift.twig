@@ -1,0 +1,42 @@
+<!-- Digital Gift / Amplop Digital & Hadiah Pernikahan (Inspired by dewanakl/undangan) -->
+<section class="my-5 text-center">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5" style="background: rgba(0,0,0,0.02); border: 1px dashed rgba(0,0,0,0.08) !important;">
+        <i class="bi bi-gift fs-1 text-accent mb-2"></i>
+        <h4 class="font-serif fw-bold text-dark mb-2">Tanda Kasih / Kado Digital</h4>
+        <p class="text-muted small px-md-4 mb-4">
+            Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih secara digital, Anda dapat menyalurkannya melalui rekening berikut:
+        </p>
+
+        <div class="row g-3 justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-xs rounded-4 p-3 bg-white text-center">
+                    <div class="fw-bold text-secondary small mb-1">BANK CENTRAL ASIA (BCA)</div>
+                    <div class="fs-4 fw-bold text-dark my-1 tracking-wide" id="bankBca">1234 5678 90</div>
+                    <div class="small text-muted mb-3">a.n. {{ invitation.partner_one_name }}</div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="copyAccountNumber('bankBca', this)">
+                        <i class="bi bi-clipboard me-1"></i> Salin No. Rekening
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-xs rounded-4 p-3 bg-white text-center">
+                    <div class="fw-bold text-secondary small mb-1">BANK MANDIRI</div>
+                    <div class="fs-4 fw-bold text-dark my-1 tracking-wide" id="bankMandiri">9876 5432 10</div>
+                    <div class="small text-muted mb-3">a.n. {{ invitation.partner_two_name }}</div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="copyAccountNumber('bankMandiri', this)">
+                        <i class="bi bi-clipboard me-1"></i> Salin No. Rekening
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {% if invitation.contact %}
+            <div class="mt-4 pt-2">
+                <a href="https://wa.me/{{ invitation.contact|replace({' ': '', '-': '', '+': ''}) }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                    <i class="bi bi-whatsapp me-1"></i> Hubungi Narahubung Panitia ({{ invitation.contact }})
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>

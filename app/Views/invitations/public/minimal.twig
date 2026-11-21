@@ -78,6 +78,8 @@
     }
 </style>
 
+{% include "components/wedding_interactive.twig" with {theme: 'minimal'} %}
+
 <div class="minimal-wrap">
     <!-- Hero / Header -->
     <header class="minimal-hero">
@@ -172,6 +174,8 @@
                 </div>
             </section>
         {% endif %}
+
+        {% include "components/wedding_gift.twig" %}
 
         <!-- Form RSVP -->
         <section id="rsvp" class="my-5 pt-3">

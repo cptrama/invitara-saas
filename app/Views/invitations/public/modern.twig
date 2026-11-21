@@ -56,6 +56,8 @@
     }
 </style>
 
+{% include "components/wedding_interactive.twig" with {theme: 'modern'} %}
+
 <div class="modern-wrap">
     <!-- Hero -->
     <header class="modern-hero">
@@ -153,6 +155,8 @@
                 </div>
             </section>
         {% endif %}
+
+        {% include "components/wedding_gift.twig" %}
 
         <!-- RSVP -->
         <section id="rsvp" class="my-5 pt-3">

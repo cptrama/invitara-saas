@@ -1,0 +1,215 @@
+<!-- ==========================================================================
+     Invitara - Interactive Wedding Features (Cover, Music, Confetti, Copy)
+     Inspired by dewanakl/undangan
+     ========================================================================== -->
+
+<!-- Floating Music Player Button -->
+<div id="musicControlWidget" style="position: fixed; bottom: 25px; right: 25px; z-index: 9990; display: none;">
+    <button id="btnToggleMusic" class="btn btn-light shadow-lg rounded-circle d-flex align-items-center justify-content-center" 
+            style="width: 52px; height: 52px; border: 2px solid rgba(255,255,255,0.85); background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); cursor: pointer;"
+            title="Putar / Hentikan Musik">
+        <i id="musicIcon" class="bi bi-disc-fill fs-3 text-primary animate-spin" style="transition: transform 0.3s;"></i>
+    </button>
+    <audio id="weddingAudio" loop preload="auto">
+        <source src="{{ asset('assets/music/wedding-love.mp3') }}" type="audio/mp3">
+    </audio>
+</div>
+
+<!-- Fullscreen Opening Envelope / Cover Overlay -->
+<div id="invitationCover" class="d-flex flex-column justify-content-center align-items-center text-center px-4" 
+     style="position: fixed; inset: 0; z-index: 99999; 
+            {% if theme == 'modern' %}
+                background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); color: #f8fafc;
+            {% elseif theme == 'floral' %}
+                background: radial-gradient(circle at center, #fff6f4 0%, #fae8e5 100%); color: #4a2828;
+            {% else %}
+                background: radial-gradient(circle at center, #fbfbfa 0%, #f0f0ee 100%); color: #212529;
+            {% endif %}
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;">
+    
+    <div class="card border-0 shadow-lg rounded-5 p-4 p-md-5 text-center" 
+         style="max-width: 480px; width: 100%; 
+                {% if theme == 'modern' %}
+                    background: rgba(30, 41, 59, 0.88); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(12px); color: #fff;
+                {% else %}
+                    background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px);
+                {% endif %}">
+        
+        <div class="mb-3">
+            <span class="avatar avatar-md rounded-circle shadow-xs 
+                {% if theme == 'modern' %}bg-info-lt text-info{% elseif theme == 'floral' %}bg-danger-lt text-danger{% else %}bg-primary-lt text-primary{% endif %}">
+                <i class="bi bi-envelope-heart fs-1"></i>
+            </span>
+        </div>
+
+        <p class="text-uppercase tracking-widest small mb-1" style="letter-spacing: 2.5px; opacity: 0.8;">The Wedding Of</p>
+        <h2 class="display-6 fw-bold mb-3 font-serif" style="{% if theme == 'floral' %}font-family: 'Brush Script MT', cursive, Georgia; font-size: 2.5rem;{% endif %}">
+            {{ invitation.partner_one_name }} <span class="d-inline-block px-1">&amp;</span> {{ invitation.partner_two_name }}
+        </h2>
+
+        <div class="my-4 py-3 px-3 rounded-4" style="background: rgba(0,0,0,0.04); border: 1px dashed rgba(0,0,0,0.12);">
+            <p class="small text-muted mb-1">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+            <h4 id="guestNameDisplay" class="fw-bold mb-0 text-capitalize">Tamu Undangan</h4>
+        </div>
+
+        <p class="small text-muted mb-4">
+            Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir dan memberikan doa restu pada hari bahagia kami.
+        </p>
+
+        <button id="btnOpenInvitation" type="button" class="btn btn-lg rounded-pill px-4 py-3 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center"
+                style="{% if theme == 'modern' %}background: #38bdf8; color: #0f172a;{% elseif theme == 'floral' %}background: #b5838d; color: #fff;{% else %}background: #2d6a4f; color: #fff;{% endif %}">
+            <i class="bi bi-envelope-open-heart fs-4 me-2"></i>
+            <span>Buka Undangan</span>
+        </button>
+    </div>
+</div>
+
+<style>
+    @keyframes spinDisc {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin {
+        animation: spinDisc 3.5s linear infinite;
+    }
+    body.cover-locked {
+        overflow: hidden !important;
+        height: 100vh !important;
+    }
+</style>
+
+<!-- Canvas Confetti Library from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Lock body scrolling while cover is visible
+        document.body.classList.add('cover-locked');
+
+        // 2. Personalize Guest Name from URL parameter (?to=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestName = urlParams.get('to') || urlParams.get('u') || urlParams.get('nama');
+        if (guestName) {
+            const guestDisplay = document.getElementById('guestNameDisplay');
+            if (guestDisplay) {
+                guestDisplay.textContent = decodeURIComponent(guestName.replace(/\+/g, ' '));
+            }
+        }
+
+        // 3. Audio & Music Player Setup
+        const audio = document.getElementById('weddingAudio');
+        const btnToggleMusic = document.getElementById('btnToggleMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicWidget = document.getElementById('musicControlWidget');
+        let isMusicPlaying = false;
+
+        function playMusic() {
+            if (audio) {
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    musicIcon.classList.add('animate-spin');
+                    musicIcon.classList.replace('bi-disc', 'bi-disc-fill');
+                }).catch(err => {
+                    console.log('Autoplay audio blocked or pending interaction:', err);
+                });
+            }
+        }
+
+        function pauseMusic() {
+            if (audio) {
+                audio.pause();
+                isMusicPlaying = false;
+                musicIcon.classList.remove('animate-spin');
+                musicIcon.classList.replace('bi-disc-fill', 'bi-disc');
+            }
+        }
+
+        if (btnToggleMusic) {
+            btnToggleMusic.addEventListener('click', function () {
+                if (isMusicPlaying) {
+                    pauseMusic();
+                } else {
+                    playMusic();
+                }
+            });
+        }
+
+        // 4. Confetti Launcher Helper
+        function fireConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 50,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 }
+                    });
+                    confetti({
+                        particleCount: 50,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 }
+                    });
+                }, 250);
+            }
+        }
+
+        // 5. Open Invitation Trigger
+        const btnOpen = document.getElementById('btnOpenInvitation');
+        const cover = document.getElementById('invitationCover');
+
+        if (btnOpen && cover) {
+            btnOpen.addEventListener('click', function () {
+                // Play music upon user click
+                playMusic();
+                if (musicWidget) {
+                    musicWidget.style.display = 'block';
+                }
+
+                // Fire celebration confetti
+                fireConfetti();
+
+                // Unlock scroll and animate cover away
+                cover.style.opacity = '0';
+                cover.style.transform = 'translateY(-30px) scale(0.98)';
+                document.body.classList.remove('cover-locked');
+
+                setTimeout(function () {
+                    cover.style.display = 'none';
+                }, 800);
+            });
+        }
+
+        // 6. Global Copy to Clipboard Function with instant feedback
+        window.copyAccountNumber = function(elementId, btnElement) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const textToCopy = el.innerText.trim();
+
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Tersalin!';
+                btnElement.classList.add('btn-success');
+                setTimeout(function() {
+                    btnElement.innerHTML = originalHtml;
+                    btnElement.classList.remove('btn-success');
+                }, 2000);
+            }).catch(function() {
+                alert('Gagal menyalin. Silakan salin secara manual: ' + textToCopy);
+            });
+        };
+
+        // 7. Fire confetti on RSVP form submit
+        const rsvpForm = document.querySelector('form[action*="/rsvp"]');
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', function() {
+                fireConfetti();
+            });
+        }
+    });
+</script>
