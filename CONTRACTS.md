@@ -185,3 +185,49 @@ Jika pengguna yang sedang login mencoba mengakses ID undangan milik orang lain, 
   - `'minimal'` -> memetakan ke template Twig `invitations/public/minimal.twig`
   - `'floral'`  -> memetakan ke template Twig `invitations/public/floral.twig`
   - `'modern'`  -> memetakan ke template Twig `invitations/public/modern.twig`
+
+---
+
+## 8. Layanan Unggah Foto (`App\Services\UploadService`)
+
+Digunakan oleh **Anggota 3** untuk menangani upload foto sampul (`covers`) dan foto galeri (`gallery`):
+
+```php
+use App\Services\UploadService;
+
+$uploader = new UploadService();
+
+try {
+    // Unggah file dari $_FILES['cover_photo'] ke subfolder public/uploads/covers/
+    $result = $uploader->upload($_FILES['cover_photo'], 'covers');
+    
+    // Hasil yang dikembalikan:
+    // $result['path']     -> '/uploads/covers/a1b2c3d4e5f6...jpg' (Simpan path ini ke database)
+    // $result['filename'] -> 'a1b2c3d4e5f6...jpg'
+    // $result['size']     -> integer
+    // $result['mime']     -> 'image/jpeg'
+} catch (\RuntimeException $e) {
+    Flash::set('error', $e->getMessage());
+    Flight::redirect('/dashboard/invitations/create');
+    return;
+}
+
+// Untuk menghapus foto lama saat diganti atau saat undangan dihapus:
+$uploader->delete($invitation['cover_photo_path']);
+```
+
+### Fitur Keamanan Upload:
+- Validasi MIME Type asli lewat PHP `finfo` (hanya `image/jpeg`, `image/png`, `image/webp`).
+- Batas ukuran file 2MB (`UPLOAD_MAX_SIZE`).
+- Sanitasi nama file menggunakan 32-karakter hash heksadesimal acak.
+- Folder `public/uploads/` diproteksi `.htaccess` dari eksekusi script PHP/CGI.
+
+---
+
+## 9. Pengaturan Profil Pengguna (`PRD Bab 6.11`)
+
+Dikelola oleh **Anggota 1**:
+- Rute Tampilan: `GET /dashboard/profile`
+- Update Nama: `POST /dashboard/profile` (membutuhkan field `name`)
+- Ubah Password: `POST /dashboard/profile/password` (membutuhkan `current_password`, `password`, `password_confirmation`)
+- Seluruh form dilindungi `CsrfMiddleware` dan `AuthMiddleware`.
