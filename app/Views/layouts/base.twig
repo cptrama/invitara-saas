@@ -6,6 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}{{ page_title ?? 'Invitara' }}{% endblock %} - {{ app_name }}</title>
 
+    <!-- Favicon & Website Tab Icon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-invitara.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo-invitara.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/img/logo-invitara.png') }}">
+
     <!-- Tabler UI & Icons via CDN (Guaranteed Fallback) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
