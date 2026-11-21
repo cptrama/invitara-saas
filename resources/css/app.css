@@ -50,6 +50,24 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Brand Logo Typography (Matching Official Invitara Logo) */
+.brand-logo-text {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.brand-logo-text-dark {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.brand-logo-text-light {
+  color: #0c2340 !important;
+}
+
 .hero-banner {
   background: radial-gradient(circle at top right, rgba(217, 70, 239, 0.08) 0%, transparent 60%),
               radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
