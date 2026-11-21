@@ -1,0 +1,93 @@
+{% extends "layouts/public.twig" %}
+
+{% block public_content %}
+<div class="container-xl py-4">
+    <!-- Breadcrumb & Navigasi Balik -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <a href="{{ url('/templates') }}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+                <i class="ti ti-arrow-left me-1"></i> Kembali ke Galeri Template
+            </a>
+        </div>
+        <div>
+            {% if is_authenticated() %}
+                <a href="{{ url('/dashboard/invitations/create?template_id=' ~ template.id) }}" class="btn btn-primary d-inline-flex align-items-center">
+                    <i class="ti ti-check me-1"></i> Gunakan Template Ini
+                </a>
+            {% else %}
+                <a href="{{ url('/register') }}" class="btn btn-primary d-inline-flex align-items-center">
+                    <i class="ti ti-user-plus me-1"></i> Buat Undangan dengan Desain Ini
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Header Template Info -->
+    <div class="card shadow-xs border-0 mb-4">
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary-lt">{{ template.category_name ?? 'Wedding' }}</span>
+                        <span class="badge bg-secondary-lt">Gaya: {{ template.view_key|capitalize }}</span>
+                        <span class="badge bg-success-lt"><i class="ti ti-check me-1"></i> Aktif</span>
+                    </div>
+                    <h1 class="display-6 fw-bold text-dark mb-2">{{ template.name }}</h1>
+                    <p class="lead text-muted mb-4">
+                        {{ template.description ?? 'Template undangan digital elegan dengan tata letak responsif, integrasi peta acara, countdown timer, galeri foto, dan formulir konfirmasi RSVP instan.' }}
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <div class="d-flex align-items-center">
+                                <i class="ti ti-device-mobile text-primary fs-2 me-2"></i>
+                                <div>
+                                    <div class="fw-semibold small">100% Mobile Ready</div>
+                                    <div class="text-muted small">Optimal di smartphone</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="d-flex align-items-center">
+                                <i class="ti ti-checkbox text-success fs-2 me-2"></i>
+                                <div>
+                                    <div class="fw-semibold small">RSVP Real-Time</div>
+                                    <div class="text-muted small">Konfirmasi otomatis</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="d-flex align-items-center">
+                                <i class="ti ti-color-swatch text-pink fs-2 me-2"></i>
+                                <div>
+                                    <div class="fw-semibold small">4 Palet Warna</div>
+                                    <div class="text-muted small">Rose, Gold, Emerald, Classic</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-center">
+                    <div class="p-4 bg-body-tertiary rounded-3 border">
+                        <span class="avatar avatar-xl {% if template.view_key == 'floral' %}bg-pink-lt text-pink{% elseif template.view_key == 'modern' %}bg-dark text-white{% else %}bg-primary-lt text-primary{% endif %} rounded-circle mb-3 shadow-xs">
+                            <i class="ti ti-palette fs-1"></i>
+                        </span>
+                        <h4 class="fw-bold mb-1">Siap untuk Acara Anda?</h4>
+                        <p class="text-muted small mb-3">Klik tombol di bawah untuk mengisi data mempelai menggunakan template ini.</p>
+                        {% if is_authenticated() %}
+                            <a href="{{ url('/dashboard/invitations/create?template_id=' ~ template.id) }}" class="btn btn-primary w-100 py-2">
+                                <i class="ti ti-edit me-1"></i> Mulai Buat Sekarang
+                            </a>
+                        {% else %}
+                            <a href="{{ url('/register') }}" class="btn btn-primary w-100 py-2">
+                                <i class="ti ti-user-plus me-1"></i> Daftar &amp; Gunakan Template
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
