@@ -105,6 +105,21 @@ class View
                 return '<i class="ti ti-' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"></i>';
             }, ['is_safe' => ['html']]));
 
+            // Active menu detector for sidebar with route-matching
+            $twig->addFunction(new TwigFunction('is_active', function (string $pattern) {
+                $current = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+                if ($pattern === '/dashboard') {
+                    return ($current === '/dashboard' || $current === '/dashboard/overview');
+                }
+                if ($pattern === '/dashboard/invitations') {
+                    return ($current === '/dashboard/invitations' || (str_starts_with($current, '/dashboard/invitations/') && !str_starts_with($current, '/dashboard/invitations/create')));
+                }
+                if ($pattern === '/dashboard/invitations/create') {
+                    return ($current === '/dashboard/invitations/create');
+                }
+                return str_starts_with($current, $pattern);
+            }));
+
             self::$twig = $twig;
         }
 

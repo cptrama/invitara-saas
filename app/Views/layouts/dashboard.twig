@@ -12,14 +12,23 @@
             </button>
 
             <!-- Brand Logo -->
-            <h1 class="navbar-brand navbar-brand-autodark px-2 py-3 mb-0">
+            <div class="px-3 py-3 border-bottom border-secondary-subtle">
                 <a href="{{ url('/dashboard') }}" class="d-flex align-items-center text-decoration-none text-white">
-                    <span class="avatar avatar-sm bg-primary-lt text-primary rounded me-2">
+                    <span class="avatar avatar-sm bg-primary-lt text-primary rounded-3 me-2 shadow-xs">
                         <i class="ti ti-mail-heart fs-2"></i>
                     </span>
-                    <span class="fw-bold fs-2 tracking-tight">Invitara</span>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold fs-2 tracking-tight text-white lh-1">Invitara</span>
+                        <div class="mt-1">
+                            {% if is_admin() %}
+                                <span class="badge bg-purple-lt text-purple py-0 px-2 fw-semibold" style="font-size: 0.68rem;">Administrator</span>
+                            {% else %}
+                                <span class="badge bg-secondary-lt text-muted py-0 px-2 fw-semibold" style="font-size: 0.68rem;">Portal Pengguna</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </a>
-            </h1>
+            </div>
 
             <!-- User Menu for Mobile -->
             <div class="navbar-nav flex-row d-lg-none">
@@ -46,52 +55,71 @@
                 </div>
             </div>
 
+            <!-- Quick CTA Button -->
+            <div class="px-3 pt-3 pb-1 d-none d-lg-block">
+                <a href="{{ url('/dashboard/invitations/create') }}" class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center shadow-xs {% if is_active('/dashboard/invitations/create') %}border border-2 border-white active{% endif %}">
+                    <i class="ti ti-plus me-1 fs-3"></i>
+                    <span class="fw-semibold">Buat Undangan</span>
+                </a>
+            </div>
+
             <!-- Sidebar Menu Content -->
             <div class="collapse navbar-collapse" id="sidebar-menu">
-                <ul class="navbar-nav pt-lg-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/dashboard') }}">
+                <ul class="navbar-nav pt-lg-2">
+                    <!-- Section: Menu Utama -->
+                    <div class="sidebar-heading">Menu Utama</div>
+                    <li class="nav-item {% if is_active('/dashboard') %}active{% endif %}">
+                        <a class="nav-link {% if is_active('/dashboard') %}active{% endif %}" href="{{ url('/dashboard') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-layout-dashboard fs-2"></i>
                             </span>
                             <span class="nav-link-title">Overview</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/dashboard/invitations') }}">
+                    <li class="nav-item {% if is_active('/dashboard/invitations') %}active{% endif %}">
+                        <a class="nav-link {% if is_active('/dashboard/invitations') %}active{% endif %}" href="{{ url('/dashboard/invitations') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-mail fs-2"></i>
                             </span>
                             <span class="nav-link-title">Undangan Saya</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/templates') }}">
+
+                    <!-- Section: Eksplorasi & Pengaturan -->
+                    <div class="sidebar-heading mt-2">Eksplorasi &amp; Pengaturan</div>
+                    <li class="nav-item {% if is_active('/templates') %}active{% endif %}">
+                        <a class="nav-link {% if is_active('/templates') %}active{% endif %}" href="{{ url('/templates') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-palette fs-2"></i>
                             </span>
                             <span class="nav-link-title">Galeri Template</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/dashboard/profile') }}">
+                    <li class="nav-item {% if is_active('/dashboard/profile') %}active{% endif %}">
+                        <a class="nav-link {% if is_active('/dashboard/profile') %}active{% endif %}" href="{{ url('/dashboard/profile') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <i class="ti ti-user-cog fs-2"></i>
                             </span>
                             <span class="nav-link-title">Pengaturan Profil</span>
                         </a>
                     </li>
+
+                    <!-- Section: Administrator (Khusus Admin) -->
                     {% if is_admin() %}
-                    <li class="nav-item">
-                        <a class="nav-link text-purple" href="{{ url('/admin') }}">
+                    <div class="sidebar-heading mt-2 text-purple">Administrasi Sistem</div>
+                    <li class="nav-item {% if is_active('/admin') %}active{% endif %}">
+                        <a class="nav-link text-purple {% if is_active('/admin') %}active admin-active{% endif %}" href="{{ url('/admin') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block text-purple">
                                 <i class="ti ti-shield-lock fs-2"></i>
                             </span>
-                            <span class="nav-link-title text-purple fw-semibold">Panel Admin</span>
+                            <span class="nav-link-title fw-semibold">Panel Admin</span>
+                            <span class="badge bg-purple text-white ms-auto font-weight-bold" style="font-size: 0.65rem;">SYS</span>
                         </a>
                     </li>
                     {% endif %}
-                    <li class="nav-item mt-2">
+
+                    <!-- Mobile CTA Button -->
+                    <li class="nav-item d-lg-none mt-2">
                         <a class="nav-link text-primary fw-semibold" href="{{ url('/dashboard/invitations/create') }}">
                             <span class="nav-link-icon d-md-none d-lg-inline-block text-primary">
                                 <i class="ti ti-circle-plus fs-2"></i>
@@ -99,12 +127,14 @@
                             <span class="nav-link-title">Buat Undangan Baru</span>
                         </a>
                     </li>
+
+                    <!-- Footer Sidebar: Landing Page & Logout -->
                     <li class="nav-item mt-auto pt-3 border-top border-secondary-subtle">
-                        <a class="nav-link" href="{{ url('/') }}" target="_blank">
+                        <a class="nav-link text-muted" href="{{ url('/') }}" target="_blank">
                             <span class="nav-link-icon d-md-none d-lg-inline-block text-muted">
                                 <i class="ti ti-external-link fs-2"></i>
                             </span>
-                            <span class="nav-link-title text-muted">Lihat Landing Page</span>
+                            <span class="nav-link-title">Lihat Landing Page</span>
                         </a>
                     </li>
                     <li class="nav-item">
