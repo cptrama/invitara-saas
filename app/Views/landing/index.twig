@@ -1,0 +1,59 @@
+{% extends "layouts/public.twig" %}
+
+{% block public_content %}
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill fw-semibold">SaaS Wedding Invitation Maker</span>
+            <h1 class="fw-bold display-5 mb-3">Buat Undangan Pernikahan Digital yang Personal & Elegan</h1>
+            <p class="lead text-muted mb-4">
+                Invitara memudahkan Anda merancang, membagikan, dan memantau konfirmasi kehadiran (RSVP) tamu undangan pernikahan tanpa keahlian desain.
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                {% if is_authenticated() %}
+                    <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-speedometer2 me-1"></i> Buka Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url('/register') }}" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-envelope-plus me-1"></i> Buat Undangan Sekarang
+                    </a>
+                    <a href="{{ url('/login') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        Masuk Akun
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Pilihan Desain Template Pernikahan</h2>
+            <p class="text-muted">Pilih template elegan yang sesuai dengan tema momen spesial Anda</p>
+        </div>
+        <div class="row g-4">
+            {% for template in templates %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="bg-secondary-subtle d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
+                            <i class="bi bi-image fs-1"></i>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-light text-dark border mb-2">{{ template.category_name ?? 'Wedding' }}</span>
+                            <h5 class="card-title fw-bold">{{ template.name }}</h5>
+                            <p class="card-text text-muted small">{{ template.description }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <a href="{{ url('/register') }}" class="btn btn-outline-primary btn-sm w-100">Pilih Template</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center text-muted py-4">Belum ada template aktif yang ditampilkan.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
