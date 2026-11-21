@@ -124,11 +124,7 @@
                                 <div class="fw-bold text-dark">{{ rsvp.guest_name }}</div>
                             </td>
                             <td>
-                                {% if rsvp.attendance_status == 'attending' %}
-                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Hadir</span>
-                                {% else %}
-                                    <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Tidak Hadir</span>
-                                {% endif %}
+                                {{ status_chip(rsvp.attendance_status) }}
                             </td>
                             <td>
                                 {% if rsvp.attendance_status == 'attending' %}

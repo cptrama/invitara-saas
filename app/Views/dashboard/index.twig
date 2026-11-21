@@ -147,19 +147,7 @@
                             </div>
                         </td>
                         <td>
-                            {% if inv.status == 'published' %}
-                                <span class="badge bg-success-lt d-inline-flex align-items-center">
-                                    <span class="status-dot status-dot-animated bg-success me-1"></span> Terpublikasi
-                                </span>
-                            {% elseif inv.status == 'draft' %}
-                                <span class="badge bg-secondary-lt d-inline-flex align-items-center">
-                                    <span class="status-dot bg-secondary me-1"></span> Draft
-                                </span>
-                            {% else %}
-                                <span class="badge bg-warning-lt d-inline-flex align-items-center">
-                                    <span class="status-dot bg-warning me-1"></span> Nonaktif
-                                </span>
-                            {% endif %}
+                            {{ status_chip(inv.status) }}
                         </td>
                         <td>
                             <div class="fw-semibold text-dark">{{ inv.total_rsvps }} respons</div>

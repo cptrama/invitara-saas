@@ -58,13 +58,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if inv.status == 'published' %}
-                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Terbit</span>
-                                {% elseif inv.status == 'draft' %}
-                                    <span class="badge bg-secondary"><i class="bi bi-pencil-square me-1"></i> Draft</span>
-                                {% else %}
-                                    <span class="badge bg-warning text-dark"><i class="bi bi-pause-circle me-1"></i> Nonaktif</span>
-                                {% endif %}
+                                {{ status_chip(inv.status) }}
                             </td>
                             <td>
                                 <a href="{{ url('/dashboard/invitations/' ~ inv.id ~ '/rsvps') }}" class="text-decoration-none">

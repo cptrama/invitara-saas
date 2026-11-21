@@ -116,13 +116,43 @@
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Pilihan Warna Tema</label>
                     <select name="theme_color" class="form-select">
-                        <option value="rose" {% if old('theme_color', 'rose') == 'rose' %}selected{% endif %}>Rose Gold / Merah Muda</option>
-                        <option value="emerald" {% if old('theme_color') == 'emerald' %}selected{% endif %}>Emerald Green / Hijau Alami</option>
-                        <option value="gold" {% if old('theme_color') == 'gold' %}selected{% endif %}>Royal Gold / Keemasan</option>
-                        <option value="classic" {% if old('theme_color') == 'classic' %}selected{% endif %}>Classic Monochrome / Hitam Putih</option>
-                        <option value="blue" {% if old('theme_color') == 'blue' %}selected{% endif %}>Ocean Blue / Biru Elegan</option>
-                        <option value="purple" {% if old('theme_color') == 'purple' %}selected{% endif %}>Lavender / Ungu Lembut</option>
+                        <optgroup label="Palet Standar Invitara (Design System)">
+                            <option value="melati" {% if old('theme_color') == 'melati' %}selected{% endif %}>Melati (Monokrom Elegan)</option>
+                            <option value="sirih" {% if old('theme_color') == 'sirih' %}selected{% endif %}>Sirih (Hijau Botani Alami)</option>
+                            <option value="mawar" {% if old('theme_color') == 'mawar' %}selected{% endif %}>Mawar (Romantis Lembut)</option>
+                            <option value="kobalt" {% if old('theme_color') == 'kobalt' %}selected{% endif %}>Kobalt (Biru Elegan)</option>
+                            <option value="kunyit" {% if old('theme_color') == 'kunyit' %}selected{% endif %}>Kunyit (Hangat Keemasan)</option>
+                            <option value="lumut" {% if old('theme_color') == 'lumut' %}selected{% endif %}>Lumut (Hijau Hutan Teduh)</option>
+                            <option value="tinta" {% if old('theme_color') == 'tinta' %}selected{% endif %}>Tinta (Gelap Berkelas)</option>
+                            <option value="pualam" {% if old('theme_color') == 'pualam' %}selected{% endif %}>Pualam (Abu Netral Bersih)</option>
+                            <option value="malam" {% if old('theme_color') == 'malam' %}selected{% endif %}>Malam (Biru Malam Pekat)</option>
+                        </optgroup>
+                        <optgroup label="Palet Klasik">
+                            <option value="rose" {% if old('theme_color', 'rose') == 'rose' %}selected{% endif %}>Rose Gold / Merah Muda</option>
+                            <option value="emerald" {% if old('theme_color') == 'emerald' %}selected{% endif %}>Emerald Green / Hijau Alami</option>
+                            <option value="gold" {% if old('theme_color') == 'gold' %}selected{% endif %}>Royal Gold / Keemasan</option>
+                            <option value="classic" {% if old('theme_color') == 'classic' %}selected{% endif %}>Classic Monochrome / Hitam Putih</option>
+                            <option value="blue" {% if old('theme_color') == 'blue' %}selected{% endif %}>Ocean Blue / Biru Elegan</option>
+                            <option value="purple" {% if old('theme_color') == 'purple' %}selected{% endif %}>Lavender / Ungu Lembut</option>
+                        </optgroup>
                     </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Kontak Narahubung / WhatsApp Panitia</label>
+                    <input type="text" name="contact" class="form-control" placeholder="Contoh: 08123456789 (Budi)" value="{{ old('contact') }}">
+                    <div class="form-text">Nomor WhatsApp atau narahubung yang bisa dihubungi tamu.</div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input type="hidden" name="show_countdown" value="0">
+                        <input class="form-check-input" type="checkbox" name="show_countdown" value="1" id="showCountdown" {% if old('show_countdown', '1') == '1' %}checked{% endif %}>
+                        <label class="form-check-label fw-semibold" for="showCountdown">
+                            Tampilkan Hitung Mundur Acara (Countdown Timer)
+                        </label>
+                        <div class="form-text">Menampilkan hitung mundur waktu menuju hari pernikahan pada undangan publik.</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6">
