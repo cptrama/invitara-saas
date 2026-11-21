@@ -1,0 +1,32 @@
+/* Tabler UI core styles */
+@import "@tabler/core/dist/css/tabler.min.css";
+
+/* Tabler & Bootstrap Icons */
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.min.css";
+
+/* Custom Invitara Brand Styles */
+:root {
+  --invitara-brand: #d946ef;
+  --invitara-dark: #1e293b;
+}
+
+.brand-gradient-text {
+  background: linear-gradient(135deg, #d946ef 0%, #8b5cf6 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-banner {
+  background: radial-gradient(circle at top right, rgba(217, 70, 239, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+}
+
+.card-hover-scale {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-hover-scale:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
