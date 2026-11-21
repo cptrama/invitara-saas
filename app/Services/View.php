@@ -82,6 +82,29 @@ class View
                 return old($key, $default);
             }));
 
+            // Design.md Section 3.1 & 11.6: Standardized Status Chip
+            $twig->addFunction(new TwigFunction('status_chip', function (string $status) {
+                switch ($status) {
+                    case 'published':
+                        return '<span class="badge" style="background:#DCE8D9; color:#17382D; font-weight:600;"><i class="ti ti-world me-1"></i> Terbit</span>';
+                    case 'draft':
+                        return '<span class="badge" style="background:#F7E8BE; color:#17382D; font-weight:600;"><i class="ti ti-pencil me-1"></i> Draf</span>';
+                    case 'unpublished':
+                        return '<span class="badge" style="background:#E7ECE4; color:#566860; font-weight:600;"><i class="ti ti-eye-off me-1"></i> Tidak terbit</span>';
+                    case 'attending':
+                        return '<span class="badge" style="background:#DCE8D9; color:#17382D; font-weight:600;"><i class="ti ti-check me-1"></i> Hadir</span>';
+                    case 'not_attending':
+                        return '<span class="badge" style="background:#E7ECE4; color:#566860; font-weight:600;"><i class="ti ti-x me-1"></i> Tidak hadir</span>';
+                    default:
+                        return '<span class="badge bg-secondary-lt text-secondary"><i class="ti ti-info-circle me-1"></i> ' . htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . '</span>';
+                }
+            }, ['is_safe' => ['html']]));
+
+            // Design.md Section 11.6: Standardized Icon helper
+            $twig->addFunction(new TwigFunction('icon', function (string $name, string $class = '') {
+                return '<i class="ti ti-' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"></i>';
+            }, ['is_safe' => ['html']]));
+
             self::$twig = $twig;
         }
 

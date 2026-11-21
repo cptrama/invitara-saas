@@ -131,11 +131,13 @@ class InvitationRepository
             INSERT INTO invitations (
                 user_id, template_id, title, slug, partner_one_name, partner_two_name,
                 cover_photo_path, event_date, event_time, timezone, venue_name, venue_address,
-                maps_url, description, closing_message, theme_color, status, published_at
+                maps_url, description, closing_message, story, contact, show_countdown,
+                theme_color, status, published_at
             ) VALUES (
                 :user_id, :template_id, :title, :slug, :partner_one_name, :partner_two_name,
                 :cover_photo_path, :event_date, :event_time, :timezone, :venue_name, :venue_address,
-                :maps_url, :description, :closing_message, :theme_color, :status, :published_at
+                :maps_url, :description, :closing_message, :story, :contact, :show_countdown,
+                :theme_color, :status, :published_at
             )
         ");
 
@@ -155,6 +157,9 @@ class InvitationRepository
             'maps_url' => $data['maps_url'] ?? null,
             'description' => $data['description'] ?? null,
             'closing_message' => $data['closing_message'] ?? null,
+            'story' => $data['story'] ?? null,
+            'contact' => $data['contact'] ?? null,
+            'show_countdown' => isset($data['show_countdown']) ? (int)$data['show_countdown'] : 1,
             'theme_color' => $data['theme_color'] ?? null,
             'status' => $data['status'] ?? 'draft',
             'published_at' => ($data['status'] ?? '') === 'published' ? date('Y-m-d H:i:s') : null,
@@ -168,8 +173,8 @@ class InvitationRepository
         $allowed = [
             'template_id', 'title', 'slug', 'partner_one_name', 'partner_two_name',
             'cover_photo_path', 'event_date', 'event_time', 'timezone', 'venue_name',
-            'venue_address', 'maps_url', 'description', 'closing_message', 'theme_color',
-            'status', 'published_at'
+            'venue_address', 'maps_url', 'description', 'closing_message', 'story',
+            'contact', 'show_countdown', 'theme_color', 'status', 'published_at'
         ];
 
         $fields = [];

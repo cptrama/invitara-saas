@@ -92,7 +92,10 @@ class InvitationController
             'event_time' => 'time',
             'timezone' => 'in:Asia/Jakarta,Asia/Makassar,Asia/Jayapura',
             'maps_url' => 'url',
-            'theme_color' => 'in:rose,emerald,gold,classic,blue,purple',
+            'theme_color' => 'in:rose,emerald,gold,classic,blue,purple,tinta,pualam,malam,melati,sirih,mawar,kobalt,kunyit,lumut',
+            'story' => 'max:3000',
+            'contact' => 'max:100',
+            'show_countdown' => 'in:0,1',
         ];
 
         if (!empty($data['slug'])) {
@@ -166,7 +169,10 @@ class InvitationController
             'event_time' => 'time',
             'timezone' => 'in:Asia/Jakarta,Asia/Makassar,Asia/Jayapura',
             'maps_url' => 'url',
-            'theme_color' => 'in:rose,emerald,gold,classic,blue,purple',
+            'theme_color' => 'in:rose,emerald,gold,classic,blue,purple,tinta,pualam,malam,melati,sirih,mawar,kobalt,kunyit,lumut',
+            'story' => 'max:3000',
+            'contact' => 'max:100',
+            'show_countdown' => 'in:0,1',
         ];
 
         $validator = Validator::make($data, $rules);
@@ -201,6 +207,9 @@ class InvitationController
             'maps_url' => !empty($data['maps_url']) ? trim($data['maps_url']) : null,
             'description' => !empty($data['description']) ? trim($data['description']) : null,
             'closing_message' => !empty($data['closing_message']) ? trim($data['closing_message']) : null,
+            'story' => !empty($data['story']) ? trim($data['story']) : null,
+            'contact' => !empty($data['contact']) ? trim($data['contact']) : null,
+            'show_countdown' => isset($data['show_countdown']) ? (int)$data['show_countdown'] : 1,
             'theme_color' => !empty($data['theme_color']) ? trim($data['theme_color']) : 'rose',
         ];
 

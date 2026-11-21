@@ -82,6 +82,9 @@ class InvitationService
             'maps_url' => !empty($data['maps_url']) ? trim($data['maps_url']) : null,
             'description' => !empty($data['description']) ? trim($data['description']) : null,
             'closing_message' => !empty($data['closing_message']) ? trim($data['closing_message']) : null,
+            'story' => !empty($data['story']) ? trim($data['story']) : null,
+            'contact' => !empty($data['contact']) ? trim($data['contact']) : null,
+            'show_countdown' => isset($data['show_countdown']) ? (int)$data['show_countdown'] : 1,
             'theme_color' => !empty($data['theme_color']) ? trim($data['theme_color']) : 'rose',
             'status' => 'draft',
         ];
@@ -98,8 +101,8 @@ class InvitationService
         $fields = [
             'template_id', 'title', 'slug', 'partner_one_name', 'partner_two_name',
             'cover_photo_path', 'event_date', 'event_time', 'timezone', 'venue_name',
-            'venue_address', 'maps_url', 'description', 'closing_message', 'theme_color',
-            'status', 'published_at'
+            'venue_address', 'maps_url', 'description', 'closing_message', 'story',
+            'contact', 'show_countdown', 'theme_color', 'status', 'published_at'
         ];
 
         foreach ($fields as $field) {

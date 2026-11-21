@@ -9,7 +9,36 @@
 :root {
   --invitara-brand: #d946ef;
   --invitara-dark: #1e293b;
+
+  /* Design.md Section 3.1: Brand Colors */
+  --melati: #F2F5EE;
+  --kertas: #FFFFFF;
+  --cekung: #E8EDE3;
+  --daun-tua: #17382D;
+  --daun: #2C6A52;
+  --daun-muda: #DCE8D9;
+  --kunyit: #E0A22A;
+  --kunyit-muda: #F7E8BE;
+  --batu: #566860;
+  --garis: #D3DCD0;
+  --tepi-input: #7C8C83;
+  --bata: #A93A2C;
+  --bata-muda: #F6DDD8;
+  --netral-chip: #E7ECE4;
 }
+
+/* Design.md Section 8.6: Wedding Template Theme Color Tokens */
+.inv[data-warna="melati"]  { --inv-bg:#F3F6F0; --inv-latar:#E6ECE2; --inv-ink:#1F4034; --inv-muted:#5A6E64; --inv-aksen:#8A6A12; --inv-garis: rgb(31 64 52 / .25); }
+.inv[data-warna="sirih"]   { --inv-bg:#1F3B31; --inv-latar:#172C24; --inv-ink:#F1F4EC; --inv-muted:#B6C4BA; --inv-aksen:#E3C16F; --inv-garis: rgb(241 244 236 / .22); }
+.inv[data-warna="mawar"]   { --inv-bg:#F8EFED; --inv-latar:#F0E1DE; --inv-ink:#46222C; --inv-muted:#7A5A62; --inv-aksen:#8E3A50; --inv-garis: rgb(70 34 44 / .25); }
+
+.inv[data-warna="kobalt"]  { --inv-bg:#E8EDF7; --inv-latar:#D8E0F0; --inv-ink:#11264D; --inv-muted:#4C5B7A; --inv-aksen:#2552C8; --inv-garis: rgb(17 38 77 / .25); }
+.inv[data-warna="kunyit"]  { --inv-bg:#F0C84B; --inv-latar:#E2B73D; --inv-ink:#2B2200; --inv-muted:#5C4B0F; --inv-aksen:#2B2200; --inv-garis: rgb(43 34 0 / .30); }
+.inv[data-warna="lumut"]   { --inv-bg:#D6E0CC; --inv-latar:#C7D3BB; --inv-ink:#1B3626; --inv-muted:#4A5E4F; --inv-aksen:#1B3626; --inv-garis: rgb(27 54 38 / .25); }
+
+.inv[data-warna="tinta"]   { --inv-bg:#F7F8FA; --inv-latar:#EAECEF; --inv-ink:#1F2A44; --inv-muted:#5B6478; --inv-aksen:#3D5A99; --inv-garis: rgb(31 42 68 / .25); }
+.inv[data-warna="pualam"]  { --inv-bg:#F3F3F0; --inv-latar:#E5E5E0; --inv-ink:#262B28; --inv-muted:#656B66; --inv-aksen:#5F6F64; --inv-garis: rgb(38 43 40 / .25); }
+.inv[data-warna="malam"]   { --inv-bg:#16213A; --inv-latar:#10192D; --inv-ink:#EEF1F7; --inv-muted:#A9B3C7; --inv-aksen:#E3C77E; --inv-garis: rgb(238 241 247 / .22); }
 
 .brand-gradient-text {
   background: linear-gradient(135deg, #d946ef 0%, #8b5cf6 50%, #3b82f6 100%);
